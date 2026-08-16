@@ -3,151 +3,382 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Mi Cartera</title>
+<title>Mi Cartera</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
+<style>
 
-        body {
+* {
+    box-sizing: border-box;
+}
 
-            font-family: Arial, sans-serif;
+body {
 
-            margin: 40px;
+    margin: 0;
 
-            background: #f5f5f5;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-            color: #222;
+    background: #f4f6f8;
 
-        }
+    color: #1f2937;
 
+}
 
-        h1 {
 
-            margin-bottom: 10px;
+/* ==============================
+   CONTENEDOR
+   ============================== */
 
-        }
+.container {
 
+    max-width: 1400px;
 
-        #estado {
+    margin: auto;
 
-            margin-bottom: 25px;
+    padding: 30px;
 
-            color: #666;
+}
 
-        }
 
+/* ==============================
+   CABECERA
+   ============================== */
 
-        .resumen {
+.header {
 
-            display: flex;
+    margin-bottom: 30px;
 
-            gap: 20px;
+}
 
-            margin-bottom: 30px;
+.header h1 {
 
-            flex-wrap: wrap;
+    margin: 0;
 
-        }
+    font-size: 32px;
 
+}
 
-        .tarjeta {
+.header p {
 
-            background: white;
+    margin-top: 8px;
 
-            padding: 20px;
+    color: #6b7280;
 
-            border-radius: 10px;
+}
 
-            min-width: 180px;
 
-            box-shadow:
-                0 2px 8px rgba(0,0,0,0.08);
+/* ==============================
+   TARJETAS
+   ============================== */
 
-        }
+.resumen {
 
+    display: grid;
 
-        .tarjeta .titulo {
+    grid-template-columns:
+        repeat(4, 1fr);
 
-            font-size: 13px;
+    gap: 20px;
 
-            color: #777;
+    margin-bottom: 25px;
 
-            margin-bottom: 8px;
+}
 
-        }
 
+.card {
 
-        .tarjeta .valor {
+    background: white;
 
-            font-size: 24px;
+    border-radius: 14px;
 
-            font-weight: bold;
+    padding: 22px;
 
-        }
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.06);
 
+}
 
-        table {
 
-            width: 100%;
+.card-title {
 
-            border-collapse: collapse;
+    font-size: 13px;
 
-            background: white;
+    color: #6b7280;
 
-            border-radius: 10px;
+    margin-bottom: 10px;
 
-            overflow: hidden;
+    text-transform: uppercase;
 
-        }
+}
 
 
-        th,
-        td {
+.card-value {
 
-            padding: 12px;
+    font-size: 27px;
 
-            border-bottom: 1px solid #eee;
+    font-weight: bold;
 
-            text-align: left;
+}
 
-        }
 
+/* ==============================
+   GRID PRINCIPAL
+   ============================== */
 
-        th {
+.grid {
 
-            background: #eeeeee;
+    display: grid;
 
-        }
+    grid-template-columns:
+        1.3fr
+        1fr;
 
+    gap: 25px;
 
-        tr:hover {
+    margin-bottom: 25px;
 
-            background: #f8f8f8;
+}
 
-        }
 
+.panel {
 
-        .positivo {
+    background: white;
 
-            color: green;
+    border-radius: 14px;
 
-        }
+    padding: 25px;
 
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.06);
 
-        .negativo {
+}
 
-            color: red;
 
-        }
+.panel h2 {
 
-    </style>
+    margin-top: 0;
+
+    font-size: 20px;
+
+}
+
+
+/* ==============================
+   GRAFICO
+   ============================== */
+
+.chart-container {
+
+    position: relative;
+
+    height: 400px;
+
+}
+
+
+/* ==============================
+   APORTACIONES
+   ============================== */
+
+.aportaciones {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 25px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.lista {
+
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+
+}
+
+
+.lista li {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 12px 0;
+
+    border-bottom:
+        1px solid #eee;
+
+}
+
+
+.ticker {
+
+    font-weight: bold;
+
+}
+
+
+.positivo {
+
+    color: #16a34a;
+
+    font-weight: bold;
+
+}
+
+
+.negativo {
+
+    color: #dc2626;
+
+    font-weight: bold;
+
+}
+
+
+/* ==============================
+   TABLA
+   ============================== */
+
+.tabla-panel {
+
+    overflow-x: auto;
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+th {
+
+    text-align: left;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    color: #6b7280;
+
+    padding: 14px;
+
+    border-bottom:
+        2px solid #eee;
+
+}
+
+
+td {
+
+    padding: 14px;
+
+    border-bottom:
+        1px solid #eee;
+
+}
+
+
+tbody tr {
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s;
+
+}
+
+
+tbody tr:hover {
+
+    background: #f5f7fa;
+
+}
+
+
+.estado {
+
+    margin-bottom: 20px;
+
+    color: #6b7280;
+
+}
+
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
+
+@media (max-width: 900px) {
+
+    .resumen {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .container {
+
+        padding: 15px;
+
+    }
+
+
+    .resumen {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .aportaciones {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+</style>
 
 </head>
 
@@ -155,81 +386,161 @@
 <body>
 
 
-    <h1>Mi Cartera</h1>
+<div class="container">
 
 
-    <div id="estado">
-        Cargando cartera...
+    <!-- ==========================
+         CABECERA
+         ========================== -->
+
+    <div class="header">
+
+        <h1>
+            Mi Cartera
+        </h1>
+
+        <p id="estado">
+            Cargando cartera...
+        </p>
+
     </div>
 
 
-    <!-- =========================================
+
+    <!-- ==========================
          RESUMEN
-         ========================================= -->
+         ========================== -->
 
     <div class="resumen">
 
 
-        <div class="tarjeta">
+        <div class="card">
 
-            <div class="titulo">
-                VALOR TOTAL
+            <div class="card-title">
+                Valor total
             </div>
 
             <div
-                class="valor"
-                id="valorTotal"
-            >
+                class="card-value"
+                id="valorTotal">
                 —
             </div>
 
         </div>
 
 
-        <div class="tarjeta">
+        <div class="card">
 
-            <div class="titulo">
-                GANANCIA TOTAL
+            <div class="card-title">
+                Ganancia total
             </div>
 
             <div
-                class="valor"
-                id="gananciaTotal"
-            >
+                class="card-value"
+                id="gananciaTotal">
                 —
             </div>
 
         </div>
 
 
-        <div class="tarjeta">
+        <div class="card">
 
-            <div class="titulo">
-                RENTABILIDAD
+            <div class="card-title">
+                Rentabilidad
             </div>
 
             <div
-                class="valor"
-                id="rentabilidad"
-            >
+                class="card-value"
+                id="rentabilidad">
                 —
             </div>
 
         </div>
 
 
-        <div class="tarjeta">
+        <div class="card">
 
-            <div class="titulo">
-                POSICIONES
+            <div class="card-title">
+                Posiciones
             </div>
 
             <div
-                class="valor"
-                id="numeroPosiciones"
-            >
+                class="card-value"
+                id="numeroPosiciones">
                 —
             </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================
+         GRAFICO + RESUMEN
+         ========================== -->
+
+    <div class="grid">
+
+
+        <div class="panel">
+
+            <h2>
+                Distribución de cartera
+            </h2>
+
+            <div class="chart-container">
+
+                <canvas
+                    id="graficoCartera">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>
+                Resumen
+            </h2>
+
+            <p>
+                Valor de mercado:
+                <strong id="resumenValor">
+                    —
+                </strong>
+            </p>
+
+            <p>
+                Coste de las posiciones:
+                <strong id="resumenCoste">
+                    —
+                </strong>
+            </p>
+
+            <p>
+                Ganancia latente:
+                <strong id="resumenLatente">
+                    —
+                </strong>
+            </p>
+
+            <p>
+                Ganancia realizada:
+                <strong id="resumenRealizada">
+                    —
+                </strong>
+            </p>
+
+            <p>
+                Ganancia total:
+                <strong id="resumenGanancia">
+                    —
+                </strong>
+            </p>
 
         </div>
 
@@ -238,482 +549,823 @@
 
 
 
-    <!-- =========================================
-         TABLA
-         ========================================= -->
+    <!-- ==========================
+         MÁS / MENOS APORTAN
+         ========================== -->
 
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>
-                    Ticker
-                </th>
-
-                <th>
-                    Títulos
-                </th>
-
-                <th>
-                    Precio actual
-                </th>
-
-                <th>
-                    Valor €
-                </th>
-
-                <th>
-                    Ganancia €
-                </th>
-
-                <th>
-                    Rentabilidad
-                </th>
-
-                <th>
-                    Peso
-                </th>
-
-            </tr>
-
-        </thead>
+    <div class="aportaciones">
 
 
-        <tbody id="datos">
+        <div class="panel">
 
-        </tbody>
+            <h2>
+                🟢 Más aportan
+            </h2>
 
-    </table>
+            <ul
+                class="lista"
+                id="masAportan">
+            </ul>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>
+                🔴 Menos aportan
+            </h2>
+
+            <ul
+                class="lista"
+                id="menosAportan">
+            </ul>
+
+        </div>
+
+
+    </div>
 
 
 
-    <script>
+    <!-- ==========================
+         POSICIONES
+         ========================== -->
+
+    <div class="panel tabla-panel">
+
+        <h2>
+            Posiciones actuales
+        </h2>
 
 
-        // =================================================
-        // URL DE APPS SCRIPT
-        // =================================================
+        <table>
 
-        const API_URL =
-            "https://script.google.com/macros/s/AKfycbxI2TECxhMIyi7Y3M4ET9Qy2lvcWJEmroqHaIvOdrZkoLCudGGx5HiekpsJ4BxkFMHfLg/exec";
+            <thead>
 
-        // =================================================
-        // FORMATEAR EUROS
-        // =================================================
+                <tr>
 
-        function euros(valor) {
+                    <th>
+                        Ticker
+                    </th>
 
-            if (
-                valor === null ||
-                valor === undefined ||
-                isNaN(valor)
-            ) {
+                    <th>
+                        Títulos
+                    </th>
 
-                return "—";
+                    <th>
+                        Precio actual
+                    </th>
 
-            }
+                    <th>
+                        Valor €
+                    </th>
+
+                    <th>
+                        Ganancia €
+                    </th>
+
+                    <th>
+                        Rentabilidad
+                    </th>
+
+                    <th>
+                        Peso
+                    </th>
+
+                </tr>
+
+            </thead>
 
 
-            return new Intl.NumberFormat(
-                "es-ES",
-                {
-                    style: "currency",
-                    currency: "EUR"
-                }
-            ).format(valor);
+            <tbody
+                id="datos">
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   API DE GOOGLE APPS SCRIPT
+   ========================================== */
+
+const API_URL =
+    "https://script.google.com/macros/s/AKfycbxI2TECxhMIyi7Y3M4ET9Qy2lvcWJEmroqHaIvOdrZkoLCudGGx5HiekpsJ4BxkFMHfLg/exec";
+
+
+
+/* ==========================================
+   FORMATO EUROS
+   ========================================== */
+
+function euros(valor) {
+
+    if (
+        valor === null ||
+        valor === undefined ||
+        isNaN(valor)
+    ) {
+
+        return "—";
+
+    }
+
+
+    return new Intl.NumberFormat(
+        "es-ES",
+        {
+
+            style: "currency",
+
+            currency: "EUR",
+
+            maximumFractionDigits: 2
 
         }
 
+    ).format(valor);
 
-        // =================================================
-        // FORMATEAR PORCENTAJE
-        // =================================================
-
-        function porcentaje(valor) {
-
-            if (
-                valor === null ||
-                valor === undefined ||
-                isNaN(valor)
-            ) {
-
-                return "—";
-
-            }
+}
 
 
-            return new Intl.NumberFormat(
-                "es-ES",
-                {
-                    style: "percent",
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            ).format(valor);
+
+/* ==========================================
+   FORMATO PORCENTAJE
+   ========================================== */
+
+function porcentaje(valor) {
+
+    if (
+        valor === null ||
+        valor === undefined ||
+        isNaN(valor)
+    ) {
+
+        return "—";
+
+    }
+
+
+    return new Intl.NumberFormat(
+        "es-ES",
+        {
+
+            style: "percent",
+
+            minimumFractionDigits: 2,
+
+            maximumFractionDigits: 2
 
         }
 
+    ).format(valor);
 
-        // =================================================
-        // CARGAR CARTERA
-        // =================================================
+}
 
-        fetch(API_URL)
 
-            .then(response => {
 
-                if (!response.ok) {
+/* ==========================================
+   CARGAR DATOS
+   ========================================== */
 
-                    throw new Error(
-                        "Error HTTP: " +
-                        response.status
-                    );
+fetch(API_URL)
 
-                }
+.then(response => {
 
-                return response.json();
+    if (!response.ok) {
 
-            })
+        throw new Error(
+            "HTTP " +
+            response.status
+        );
 
+    }
 
-            .then(cartera => {
+    return response.json();
 
+})
 
-                console.log(
-                    "Cartera recibida:",
-                    cartera
-                );
 
+.then(cartera => {
 
-                if (
-                    !Array.isArray(cartera) ||
-                    cartera.length === 0
-                ) {
 
-                    document.getElementById(
-                        "estado"
-                    ).textContent =
-                        "No hay posiciones abiertas.";
+    console.log(
+        "Datos recibidos:",
+        cartera
+    );
 
-                    return;
 
-                }
+    if (
+        !Array.isArray(cartera) ||
+        cartera.length === 0
+    ) {
 
+        document.getElementById(
+            "estado"
+        ).textContent =
+            "No hay posiciones abiertas.";
 
-                // =========================================
-                // CALCULAR RESUMEN
-                // =========================================
+        return;
 
-                let valorTotal = 0;
+    }
 
-                let gananciaTotal = 0;
 
-                let capitalTotal = 0;
 
+    /* ======================================
+       CALCULOS
+       ====================================== */
 
-                cartera.forEach(posicion => {
+    let valorTotal = 0;
 
-                    valorTotal +=
-                        Number(
-                            posicion[
-                                "Valor actual €"
-                            ]
-                        ) || 0;
+    let costeTotal = 0;
 
+    let gananciaLatente = 0;
 
-                    gananciaTotal +=
-                        Number(
-                            posicion[
-                                "Ganancia total €"
-                            ]
-                        ) || 0;
+    let gananciaRealizada = 0;
 
+    let gananciaTotal = 0;
 
-                    capitalTotal +=
-                        Number(
-                            posicion[
-                                "Capital comprado total €"
-                            ]
-                        ) || 0;
 
-                });
 
+    cartera.forEach(posicion => {
 
-                const rentabilidad =
-                    capitalTotal !== 0
-                        ? gananciaTotal / capitalTotal
-                        : 0;
 
+        valorTotal +=
+            Number(
+                posicion[
+                    "Valor actual €"
+                ]
+            ) || 0;
 
-                // =========================================
-                // MOSTRAR RESUMEN
-                // =========================================
 
-                document.getElementById(
-                    "valorTotal"
-                ).textContent =
-                    euros(valorTotal);
+        costeTotal +=
+            Number(
+                posicion[
+                    "Coste posición €"
+                ]
+            ) || 0;
 
 
-                document.getElementById(
-                    "gananciaTotal"
-                ).textContent =
-                    euros(gananciaTotal);
+        gananciaLatente +=
+            Number(
+                posicion[
+                    "Ganancia latente €"
+                ]
+            ) || 0;
 
 
-                document.getElementById(
-                    "rentabilidad"
-                ).textContent =
-                    porcentaje(rentabilidad);
+        gananciaRealizada +=
+            Number(
+                posicion[
+                    "Ganancia realizada €"
+                ]
+            ) || 0;
 
 
-                document.getElementById(
-                    "numeroPosiciones"
-                ).textContent =
-                    cartera.length;
+        gananciaTotal +=
+            Number(
+                posicion[
+                    "Ganancia total €"
+                ]
+            ) || 0;
 
+    });
 
-                document.getElementById(
-                    "estado"
-                ).textContent =
-                    cartera.length +
-                    " posiciones abiertas.";
 
 
+    const rentabilidad =
+        costeTotal !== 0
+            ? gananciaTotal / costeTotal
+            : 0;
 
-                // =========================================
-                // TABLA
-                // =========================================
 
-                const cuerpo =
-                    document.getElementById(
-                        "datos"
-                    );
 
+    /* ======================================
+       TARJETAS
+       ====================================== */
 
-                cartera.forEach(posicion => {
+    document.getElementById(
+        "valorTotal"
+    ).textContent =
+        euros(valorTotal);
 
 
-                    const tr =
-                        document.createElement(
-                            "tr"
-                        );
+    document.getElementById(
+        "gananciaTotal"
+    ).textContent =
+        euros(gananciaTotal);
 
 
-                    // TICKER
-                    const tdTicker =
-                        document.createElement(
-                            "td"
-                        );
+    document.getElementById(
+        "rentabilidad"
+    ).textContent =
+        porcentaje(rentabilidad);
 
-                    tdTicker.textContent =
-                        posicion["Ticker"];
 
-                    tr.appendChild(
-                        tdTicker
-                    );
+    document.getElementById(
+        "numeroPosiciones"
+    ).textContent =
+        cartera.length;
 
 
-                    // TITULOS
-                    const tdTitulos =
-                        document.createElement(
-                            "td"
-                        );
 
-                    tdTitulos.textContent =
-                        Number(
-                            posicion[
-                                "Títulos actuales"
-                            ]
-                        ).toLocaleString(
-                            "es-ES",
-                            {
-                                maximumFractionDigits: 2
-                            }
-                        );
+    /* ======================================
+       RESUMEN
+       ====================================== */
 
-                    tr.appendChild(
-                        tdTitulos
-                    );
+    document.getElementById(
+        "resumenValor"
+    ).textContent =
+        euros(valorTotal);
 
 
-                    // PRECIO ACTUAL
-                    const tdPrecio =
-                        document.createElement(
-                            "td"
-                        );
+    document.getElementById(
+        "resumenCoste"
+    ).textContent =
+        euros(costeTotal);
 
-                    const precio =
-                        Number(
-                            posicion[
-                                "Precio actual €"
-                            ]
-                        );
 
+    document.getElementById(
+        "resumenLatente"
+    ).textContent =
+        euros(gananciaLatente);
 
-                    tdPrecio.textContent =
-                        euros(precio);
 
-                    tr.appendChild(
-                        tdPrecio
-                    );
+    document.getElementById(
+        "resumenRealizada"
+    ).textContent =
+        euros(gananciaRealizada);
 
 
-                    // VALOR ACTUAL
-                    const tdValor =
-                        document.createElement(
-                            "td"
-                        );
+    document.getElementById(
+        "resumenGanancia"
+    ).textContent =
+        euros(gananciaTotal);
 
-                    const valor =
-                        Number(
-                            posicion[
-                                "Valor actual €"
-                            ]
-                        );
 
 
-                    tdValor.textContent =
-                        euros(valor);
+    /* ======================================
+       ESTADO
+       ====================================== */
 
-                    tr.appendChild(
-                        tdValor
-                    );
+    document.getElementById(
+        "estado"
+    ).textContent =
+        cartera.length +
+        " posiciones abiertas";
 
 
-                    // GANANCIA
-                    const tdGanancia =
-                        document.createElement(
-                            "td"
-                        );
 
-                    const ganancia =
-                        Number(
-                            posicion[
-                                "Ganancia total €"
-                            ]
-                        );
+    /* ======================================
+       GRAFICO
+       ====================================== */
 
+    const tickers =
+        cartera.map(
+            p => p["Ticker"]
+        );
 
-                    tdGanancia.textContent =
-                        euros(ganancia);
 
+    const valores =
+        cartera.map(
+            p =>
+                Number(
+                    p["Valor actual €"]
+                ) || 0
+        );
 
-                    if (ganancia >= 0) {
 
-                        tdGanancia.classList.add(
-                            "positivo"
-                        );
+    new Chart(
 
-                    } else {
+        document.getElementById(
+            "graficoCartera"
+        ),
 
-                        tdGanancia.classList.add(
-                            "negativo"
-                        );
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: tickers,
+
+                datasets: [{
+
+                    data: valores
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        position: "right"
 
                     }
 
+                }
 
-                    tr.appendChild(
-                        tdGanancia
+            }
+
+        }
+
+    );
+
+
+
+    /* ======================================
+       MÁS / MENOS APORTAN
+       ====================================== */
+
+    const ordenadas =
+        [...cartera].sort(
+
+            (a, b) =>
+
+                Number(
+                    b[
+                        "Ganancia total €"
+                    ]
+                ) -
+
+                Number(
+                    a[
+                        "Ganancia total €"
+                    ]
+                )
+
+        );
+
+
+
+    const masAportan =
+        ordenadas.slice(0, 5);
+
+
+    const menosAportan =
+        [...ordenadas]
+        .reverse()
+        .slice(0, 5);
+
+
+
+    function crearLista(
+        elemento,
+        posiciones
+    ) {
+
+        elemento.innerHTML = "";
+
+
+        posiciones.forEach(
+            posicion => {
+
+
+                const li =
+                    document.createElement(
+                        "li"
                     );
 
 
-                    // RENTABILIDAD
-                    const tdRentabilidad =
-                        document.createElement(
-                            "td"
-                        );
-
-
-                    const rentabilidad =
-                        Number(
-                            posicion[
-                                "Rentabilidad total %"
-                            ]
-                        );
-
-
-                    tdRentabilidad.textContent =
-                        porcentaje(
-                            rentabilidad
-                        );
-
-
-                    if (
-                        rentabilidad >= 0
-                    ) {
-
-                        tdRentabilidad.classList.add(
-                            "positivo"
-                        );
-
-                    } else {
-
-                        tdRentabilidad.classList.add(
-                            "negativo"
-                        );
-
-                    }
-
-
-                    tr.appendChild(
-                        tdRentabilidad
+                const ticker =
+                    document.createElement(
+                        "span"
                     );
 
 
-                    // PESO
-                    const tdPeso =
-                        document.createElement(
-                            "td"
-                        );
+                ticker.className =
+                    "ticker";
 
 
-                    const peso =
-                        Number(
-                            posicion[
-                                "Peso cartera %"
-                            ]
-                        );
+                ticker.textContent =
+                    posicion["Ticker"];
 
 
-                    tdPeso.textContent =
-                        porcentaje(peso);
-
-
-                    tr.appendChild(
-                        tdPeso
+                const ganancia =
+                    document.createElement(
+                        "span"
                     );
 
 
-                    cuerpo.appendChild(
-                        tr
-                    );
+                const valor =
+                    Number(
+                        posicion[
+                            "Ganancia total €"
+                        ]
+                    ) || 0;
 
-                });
 
-            })
+                ganancia.textContent =
+                    euros(valor);
 
 
-            .catch(error => {
+                if (valor >= 0) {
 
-                console.error(
-                    "Error:",
-                    error
+                    ganancia.className =
+                        "positivo";
+
+                } else {
+
+                    ganancia.className =
+                        "negativo";
+
+                }
+
+
+                li.appendChild(
+                    ticker
                 );
 
 
-                document.getElementById(
-                    "estado"
-                ).textContent =
-                    "Error al cargar la cartera.";
-
-            });
+                li.appendChild(
+                    ganancia
+                );
 
 
-    </script>
+                elemento.appendChild(
+                    li
+                );
+
+            }
+
+        );
+
+    }
+
+
+
+    crearLista(
+
+        document.getElementById(
+            "masAportan"
+        ),
+
+        masAportan
+
+    );
+
+
+    crearLista(
+
+        document.getElementById(
+            "menosAportan"
+        ),
+
+        menosAportan
+
+    );
+
+
+
+    /* ======================================
+       TABLA
+       ====================================== */
+
+    const cuerpo =
+        document.getElementById(
+            "datos"
+        );
+
+
+    cartera.forEach(
+        posicion => {
+
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            /* TICKER */
+
+            const ticker =
+                document.createElement(
+                    "td"
+                );
+
+
+            ticker.textContent =
+                posicion["Ticker"];
+
+
+            tr.appendChild(
+                ticker
+            );
+
+
+
+            /* TITULOS */
+
+            const titulos =
+                document.createElement(
+                    "td"
+                );
+
+
+            titulos.textContent =
+                Number(
+                    posicion[
+                        "Títulos actuales"
+                    ]
+                ).toLocaleString(
+                    "es-ES",
+                    {
+                        maximumFractionDigits: 2
+                    }
+                );
+
+
+            tr.appendChild(
+                titulos
+            );
+
+
+
+            /* PRECIO */
+
+            const precio =
+                document.createElement(
+                    "td"
+                );
+
+
+            precio.textContent =
+                euros(
+                    Number(
+                        posicion[
+                            "Precio actual €"
+                        ]
+                    )
+                );
+
+
+            tr.appendChild(
+                precio
+            );
+
+
+
+            /* VALOR */
+
+            const valor =
+                document.createElement(
+                    "td"
+                );
+
+
+            valor.textContent =
+                euros(
+                    Number(
+                        posicion[
+                            "Valor actual €"
+                        ]
+                    )
+                );
+
+
+            tr.appendChild(
+                valor
+            );
+
+
+
+            /* GANANCIA */
+
+            const ganancia =
+                document.createElement(
+                    "td"
+                );
+
+
+            const gananciaValor =
+                Number(
+                    posicion[
+                        "Ganancia total €"
+                    ]
+                ) || 0;
+
+
+            ganancia.textContent =
+                euros(
+                    gananciaValor
+                );
+
+
+            ganancia.className =
+                gananciaValor >= 0
+                    ? "positivo"
+                    : "negativo";
+
+
+            tr.appendChild(
+                ganancia
+            );
+
+
+
+            /* RENTABILIDAD */
+
+            const rentabilidad =
+                document.createElement(
+                    "td"
+                );
+
+
+            const rentabilidadValor =
+                Number(
+                    posicion[
+                        "Rentabilidad total %"
+                    ]
+                ) || 0;
+
+
+            rentabilidad.textContent =
+                porcentaje(
+                    rentabilidadValor
+                );
+
+
+            rentabilidad.className =
+                rentabilidadValor >= 0
+                    ? "positivo"
+                    : "negativo";
+
+
+            tr.appendChild(
+                rentabilidad
+            );
+
+
+
+            /* PESO */
+
+            const peso =
+                document.createElement(
+                    "td"
+                );
+
+
+            peso.textContent =
+                porcentaje(
+                    Number(
+                        posicion[
+                            "Peso cartera %"
+                        ]
+                    ) || 0
+                );
+
+
+            tr.appendChild(
+                peso
+            );
+
+
+            cuerpo.appendChild(
+                tr
+            );
+
+        }
+
+    );
+
+})
+
+
+.catch(error => {
+
+
+    console.error(
+        error
+    );
+
+
+    document.getElementById(
+        "estado"
+    ).textContent =
+        "Error al cargar la cartera.";
+
+});
+
+
+</script>
 
 
 </body>
