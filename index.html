@@ -1,137 +1,722 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Mi Cartera</title>
 
+
     <style>
+
         body {
+
             font-family: Arial, sans-serif;
+
             margin: 40px;
+
             background: #f5f5f5;
+
+            color: #222;
+
         }
+
 
         h1 {
-            margin-bottom: 30px;
+
+            margin-bottom: 10px;
+
         }
+
 
         #estado {
-            margin-bottom: 20px;
+
+            margin-bottom: 25px;
+
+            color: #666;
+
         }
+
+
+        .resumen {
+
+            display: flex;
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .tarjeta {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            min-width: 180px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.08);
+
+        }
+
+
+        .tarjeta .titulo {
+
+            font-size: 13px;
+
+            color: #777;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .tarjeta .valor {
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+        }
+
 
         table {
+
             width: 100%;
+
             border-collapse: collapse;
+
             background: white;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
         }
 
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
+
+        th,
+        td {
+
+            padding: 12px;
+
+            border-bottom: 1px solid #eee;
+
             text-align: left;
+
         }
+
 
         th {
+
             background: #eeeeee;
+
         }
+
+
+        tr:hover {
+
+            background: #f8f8f8;
+
+        }
+
+
+        .positivo {
+
+            color: green;
+
+        }
+
+
+        .negativo {
+
+            color: red;
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
     <h1>Mi Cartera</h1>
 
-    <div id="estado">Cargando posiciones...</div>
 
-    <table id="tabla">
+    <div id="estado">
+        Cargando cartera...
+    </div>
+
+
+    <!-- =========================================
+         RESUMEN
+         ========================================= -->
+
+    <div class="resumen">
+
+
+        <div class="tarjeta">
+
+            <div class="titulo">
+                VALOR TOTAL
+            </div>
+
+            <div
+                class="valor"
+                id="valorTotal"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="tarjeta">
+
+            <div class="titulo">
+                GANANCIA TOTAL
+            </div>
+
+            <div
+                class="valor"
+                id="gananciaTotal"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="tarjeta">
+
+            <div class="titulo">
+                RENTABILIDAD
+            </div>
+
+            <div
+                class="valor"
+                id="rentabilidad"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="tarjeta">
+
+            <div class="titulo">
+                POSICIONES
+            </div>
+
+            <div
+                class="valor"
+                id="numeroPosiciones"
+            >
+                —
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================================
+         TABLA
+         ========================================= -->
+
+    <table>
+
         <thead>
-            <tr id="cabecera"></tr>
+
+            <tr>
+
+                <th>
+                    Ticker
+                </th>
+
+                <th>
+                    Títulos
+                </th>
+
+                <th>
+                    Precio actual
+                </th>
+
+                <th>
+                    Valor €
+                </th>
+
+                <th>
+                    Ganancia €
+                </th>
+
+                <th>
+                    Rentabilidad
+                </th>
+
+                <th>
+                    Peso
+                </th>
+
+            </tr>
+
         </thead>
 
-        <tbody id="datos"></tbody>
+
+        <tbody id="datos">
+
+        </tbody>
+
     </table>
+
+
 
     <script>
 
-        const SHEET_ID = "1oS1XulPds94IiphFWgg4T7z84IZ-6IFZEndxldMSO-c";
-        const SHEET_NAME = "Posiciones";
 
-        const URL =
-            `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+        // =================================================
+        // URL DE APPS SCRIPT
+        // =================================================
 
-        fetch(URL)
-            .then(response => response.text())
-            .then(text => {
+        const API_URL =
+            https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnRZLEuTikHLAetE8fePIXjryMEPS-D7L5x8PqgaGa4y_Ne_-l7vrhmUXJYU4WPMI90C5ss-gTKV8A3Eb9B5A6t3VAqACpTvdMryGwfH2BYPkiXncvEsyq3tm9jkeACoqyTxbjM4ZVwbiSK_bQibNrxNaSH1ZACHdDV2oZzAqSJnLnyk2EVSSRiBrzs0oqSFfzyKzwh62ORkQ4oPSl-tk4ChPRi4lCLinx5wHD_M0Q3S7gHJ761rPfEXkmw-K7BbiV_T-fecHzKtWj662hTL-KyQnA_6Fg&lib=MVwygSQrx01oLNrnXITK0o_0CFRiJd1Op;
 
-                const json = JSON.parse(
-                    text.substring(47, text.length - 2)
-                );
 
-                const rows = json.table.rows;
+        // =================================================
+        // FORMATEAR EUROS
+        // =================================================
 
-                if (rows.length === 0) {
-                    document.getElementById("estado").textContent =
-                        "No hay datos en la hoja.";
-                    return;
+        function euros(valor) {
+
+            if (
+                valor === null ||
+                valor === undefined ||
+                isNaN(valor)
+            ) {
+
+                return "—";
+
+            }
+
+
+            return new Intl.NumberFormat(
+                "es-ES",
+                {
+                    style: "currency",
+                    currency: "EUR"
+                }
+            ).format(valor);
+
+        }
+
+
+        // =================================================
+        // FORMATEAR PORCENTAJE
+        // =================================================
+
+        function porcentaje(valor) {
+
+            if (
+                valor === null ||
+                valor === undefined ||
+                isNaN(valor)
+            ) {
+
+                return "—";
+
+            }
+
+
+            return new Intl.NumberFormat(
+                "es-ES",
+                {
+                    style: "percent",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            ).format(valor);
+
+        }
+
+
+        // =================================================
+        // CARGAR CARTERA
+        // =================================================
+
+        fetch(API_URL)
+
+            .then(response => {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Error HTTP: " +
+                        response.status
+                    );
+
                 }
 
-                // Obtener cabeceras
-                const headers = json.table.cols.map(col => col.label);
-
-                const cabecera =
-                    document.getElementById("cabecera");
-
-                headers.forEach(header => {
-
-                    const th = document.createElement("th");
-                    th.textContent = header;
-
-                    cabecera.appendChild(th);
-
-                });
-
-                // Obtener datos
-                const cuerpo =
-                    document.getElementById("datos");
-
-                rows.forEach(row => {
-
-                    const tr = document.createElement("tr");
-
-                    headers.forEach((header, index) => {
-
-                        const td = document.createElement("td");
-
-                        const cell = row.c[index];
-
-                        td.textContent =
-                            cell ? cell.v : "";
-
-                        tr.appendChild(td);
-
-                    });
-
-                    cuerpo.appendChild(tr);
-
-                });
-
-                document.getElementById("estado").textContent =
-                    `${rows.length} posiciones cargadas correctamente.`;
+                return response.json();
 
             })
 
+
+            .then(cartera => {
+
+
+                console.log(
+                    "Cartera recibida:",
+                    cartera
+                );
+
+
+                if (
+                    !Array.isArray(cartera) ||
+                    cartera.length === 0
+                ) {
+
+                    document.getElementById(
+                        "estado"
+                    ).textContent =
+                        "No hay posiciones abiertas.";
+
+                    return;
+
+                }
+
+
+                // =========================================
+                // CALCULAR RESUMEN
+                // =========================================
+
+                let valorTotal = 0;
+
+                let gananciaTotal = 0;
+
+                let capitalTotal = 0;
+
+
+                cartera.forEach(posicion => {
+
+                    valorTotal +=
+                        Number(
+                            posicion[
+                                "Valor actual €"
+                            ]
+                        ) || 0;
+
+
+                    gananciaTotal +=
+                        Number(
+                            posicion[
+                                "Ganancia total €"
+                            ]
+                        ) || 0;
+
+
+                    capitalTotal +=
+                        Number(
+                            posicion[
+                                "Capital comprado total €"
+                            ]
+                        ) || 0;
+
+                });
+
+
+                const rentabilidad =
+                    capitalTotal !== 0
+                        ? gananciaTotal / capitalTotal
+                        : 0;
+
+
+                // =========================================
+                // MOSTRAR RESUMEN
+                // =========================================
+
+                document.getElementById(
+                    "valorTotal"
+                ).textContent =
+                    euros(valorTotal);
+
+
+                document.getElementById(
+                    "gananciaTotal"
+                ).textContent =
+                    euros(gananciaTotal);
+
+
+                document.getElementById(
+                    "rentabilidad"
+                ).textContent =
+                    porcentaje(rentabilidad);
+
+
+                document.getElementById(
+                    "numeroPosiciones"
+                ).textContent =
+                    cartera.length;
+
+
+                document.getElementById(
+                    "estado"
+                ).textContent =
+                    cartera.length +
+                    " posiciones abiertas.";
+
+
+
+                // =========================================
+                // TABLA
+                // =========================================
+
+                const cuerpo =
+                    document.getElementById(
+                        "datos"
+                    );
+
+
+                cartera.forEach(posicion => {
+
+
+                    const tr =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    // TICKER
+                    const tdTicker =
+                        document.createElement(
+                            "td"
+                        );
+
+                    tdTicker.textContent =
+                        posicion["Ticker"];
+
+                    tr.appendChild(
+                        tdTicker
+                    );
+
+
+                    // TITULOS
+                    const tdTitulos =
+                        document.createElement(
+                            "td"
+                        );
+
+                    tdTitulos.textContent =
+                        Number(
+                            posicion[
+                                "Títulos actuales"
+                            ]
+                        ).toLocaleString(
+                            "es-ES",
+                            {
+                                maximumFractionDigits: 2
+                            }
+                        );
+
+                    tr.appendChild(
+                        tdTitulos
+                    );
+
+
+                    // PRECIO ACTUAL
+                    const tdPrecio =
+                        document.createElement(
+                            "td"
+                        );
+
+                    const precio =
+                        Number(
+                            posicion[
+                                "Precio actual €"
+                            ]
+                        );
+
+
+                    tdPrecio.textContent =
+                        euros(precio);
+
+                    tr.appendChild(
+                        tdPrecio
+                    );
+
+
+                    // VALOR ACTUAL
+                    const tdValor =
+                        document.createElement(
+                            "td"
+                        );
+
+                    const valor =
+                        Number(
+                            posicion[
+                                "Valor actual €"
+                            ]
+                        );
+
+
+                    tdValor.textContent =
+                        euros(valor);
+
+                    tr.appendChild(
+                        tdValor
+                    );
+
+
+                    // GANANCIA
+                    const tdGanancia =
+                        document.createElement(
+                            "td"
+                        );
+
+                    const ganancia =
+                        Number(
+                            posicion[
+                                "Ganancia total €"
+                            ]
+                        );
+
+
+                    tdGanancia.textContent =
+                        euros(ganancia);
+
+
+                    if (ganancia >= 0) {
+
+                        tdGanancia.classList.add(
+                            "positivo"
+                        );
+
+                    } else {
+
+                        tdGanancia.classList.add(
+                            "negativo"
+                        );
+
+                    }
+
+
+                    tr.appendChild(
+                        tdGanancia
+                    );
+
+
+                    // RENTABILIDAD
+                    const tdRentabilidad =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    const rentabilidad =
+                        Number(
+                            posicion[
+                                "Rentabilidad total %"
+                            ]
+                        );
+
+
+                    tdRentabilidad.textContent =
+                        porcentaje(
+                            rentabilidad
+                        );
+
+
+                    if (
+                        rentabilidad >= 0
+                    ) {
+
+                        tdRentabilidad.classList.add(
+                            "positivo"
+                        );
+
+                    } else {
+
+                        tdRentabilidad.classList.add(
+                            "negativo"
+                        );
+
+                    }
+
+
+                    tr.appendChild(
+                        tdRentabilidad
+                    );
+
+
+                    // PESO
+                    const tdPeso =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    const peso =
+                        Number(
+                            posicion[
+                                "Peso cartera %"
+                            ]
+                        );
+
+
+                    tdPeso.textContent =
+                        porcentaje(peso);
+
+
+                    tr.appendChild(
+                        tdPeso
+                    );
+
+
+                    cuerpo.appendChild(
+                        tr
+                    );
+
+                });
+
+            })
+
+
             .catch(error => {
 
-                console.error(error);
+                console.error(
+                    "Error:",
+                    error
+                );
 
-                document.getElementById("estado").textContent =
-                    "Error al cargar los datos de Google Sheets.";
+
+                document.getElementById(
+                    "estado"
+                ).textContent =
+                    "Error al cargar la cartera.";
 
             });
 
+
     </script>
 
+
 </body>
+
 </html>
