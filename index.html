@@ -5,13 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Mi Cartera</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        #estado {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #eeeeee;
+        }
+    </style>
 </head>
 
 <body>
 
     <h1>Mi Cartera</h1>
 
-    <p>Dashboard de inversión</p>
+    <div id="estado">Cargando posiciones...</div>
+
+    <table id="tabla">
+        <thead>
+            <tr id="cabecera"></tr>
+        </thead>
+
+        <tbody id="datos"></tbody>
+    </table>
+
+    <script>
+
+        const SHEET_ID = "1oS1XulPds94IiphFWgg4T7z84IZ-6IFZEndxldMSO-c";
+        const SHEET_NAME = "Posiciones";
+
+        const URL =
+            `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+        fetch(URL)
+            .then(response => response.text())
+            .then(text => {
+
+                const json = JSON.parse(
+                    text.substring(47, text.length - 2)
+                );
+
+                const rows = json.table.rows;
+
+                if (rows.length === 0) {
+                    document.getElementById("estado").textContent =
+                        "No hay datos en la hoja.";
+                    return;
+                }
+
+                // Obtener cabeceras
+                const headers = json.table.cols.map(col => col.label);
+
+                const cabecera =
+                    document.getElementById("cabecera");
+
+                headers.forEach(header => {
+
+                    const th = document.createElement("th");
+                    th.textContent = header;
+
+                    cabecera.appendChild(th);
+
+                });
+
+                // Obtener datos
+                const cuerpo =
+                    document.getElementById("datos");
+
+                rows.forEach(row => {
+
+                    const tr = document.createElement("tr");
+
+                    headers.forEach((header, index) => {
+
+                        const td = document.createElement("td");
+
+                        const cell = row.c[index];
+
+                        td.textContent =
+                            cell ? cell.v : "";
+
+                        tr.appendChild(td);
+
+                    });
+
+                    cuerpo.appendChild(tr);
+
+                });
+
+                document.getElementById("estado").textContent =
+                    `${rows.length} posiciones cargadas correctamente.`;
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                document.getElementById("estado").textContent =
+                    "Error al cargar los datos de Google Sheets.";
+
+            });
+
+    </script>
 
 </body>
 </html>
