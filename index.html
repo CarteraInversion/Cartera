@@ -1650,16 +1650,17 @@ function abrirPosicion(posicion) {
             ]
         ],
 
-        [
-            "Precio medio",
-            euros(
-                Number(
-                    posicion[
-                        "Precio medio €"
-                    ]
-                )
-            )
-        ],
+       [
+    "Precio medio",
+    euros(
+        Number(
+            posicion["Coste posición €"]
+        ) /
+        Number(
+            posicion["Títulos actuales"]
+        )
+    )
+],
 
         [
             "Precio actual",
@@ -1898,7 +1899,8 @@ function abrirPosicion(posicion) {
 
                         const fecha =
                             operacion[
-                                "Fecha"
+                               formatearFecha(
+                                operacion["Fecha"]
                             ];
 
 
@@ -1910,19 +1912,21 @@ function abrirPosicion(posicion) {
 
                         const titulos =
                             operacion[
-                                "Títulos"
+                                "Cantidad"
                             ];
 
 
                         const precio =
-                            operacion[
-                                "Precio"
+                            numero2(
+                                operacion["Precio"]
                             ];
 
 
                         const importe =
-                            operacion[
-                                "Importe €"
+                            euros(
+                                Number(
+                                    operacion["Importe €"]
+                                        )
                             ];
 
 
@@ -2063,6 +2067,39 @@ document.addEventListener(
 
     }
 );
+    function formatearFecha(fecha) {
+
+    if (!fecha) {
+        return "";
+    }
+
+    const d = new Date(fecha);
+
+    if (isNaN(d.getTime())) {
+        return fecha;
+    }
+
+    return d.toLocaleDateString(
+        "es-ES",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+
+}
+    function numero2(valor) {
+
+    return Number(valor).toLocaleString(
+        "es-ES",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+}
 </script>
 
 
