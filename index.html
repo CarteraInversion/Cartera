@@ -477,7 +477,13 @@ tbody tr:hover {
 
     font-weight: bold;
 }
-    
+.detalle-valor.ganancia-positiva {
+    color: #16a34a;
+}
+
+.detalle-valor.ganancia-negativa {
+    color: #dc2626;
+}    
 .detalle-valor.positivo {
 
     color: #16a34a;
@@ -1338,17 +1344,45 @@ function abrirPosicion(posicion) {
                 "detalle";
 
 
-            div.innerHTML = `
+            let claseGanancia = "";
 
-                <div class="detalle-titulo">
-                    ${campo[0]}
-                </div>
+if (
+    campo[0] === "Ganancia latente" ||
+    campo[0] === "Ganancia realizada" ||
+    campo[0] === "Ganancia total" ||
+    campo[0] === "Rentabilidad"
+) {
 
-                <div class="detalle-valor">
-                    ${campo[1]}
-                </div>
+    const texto = String(campo[1])
+        .replace(/\./g, "")
+        .replace(",", ".")
+        .replace("€", "")
+        .replace("%", "")
+        .trim();
 
-            `;
+    const valor = parseFloat(texto);
+
+    if (!isNaN(valor)) {
+
+        claseGanancia =
+            valor >= 0
+                ? "ganancia-positiva"
+                : "ganancia-negativa";
+    }
+}
+
+
+div.innerHTML = `
+
+    <div class="detalle-titulo">
+        ${campo[0]}
+    </div>
+
+    <div class="detalle-valor ${claseGanancia}">
+        ${campo[1]}
+    </div>
+
+`;
 
 
             detalles.appendChild(
