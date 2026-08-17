@@ -438,9 +438,26 @@ tbody tr:hover {
 
     background: #f5f6f8;
 
-    padding: 15px;
+    padding: 17px;
 
-    border-radius: 10px;
+    border-radius: 11px;
+
+    border: 1px solid #eef0f2;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.detalle:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 4px 12px
+        rgba(0,0,0,0.06);
+
 }
 
 
@@ -460,7 +477,19 @@ tbody tr:hover {
 
     font-weight: bold;
 }
+    
+.detalle-valor.positivo {
 
+    color: #16a34a;
+
+}
+
+
+.detalle-valor.negativo {
+
+    color: #dc2626;
+
+}
 
 /* ==========================================
    HISTORIAL
@@ -468,9 +497,17 @@ tbody tr:hover {
 
 .historial-titulo {
 
-    margin-top: 30px;
+    margin-top: 35px;
 
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+
+    padding-top: 25px;
+
+    border-top:
+        2px solid #eef0f2;
+
+    font-size: 20px;
+
 }
 
 
