@@ -1947,48 +1947,240 @@ fetch(API_URL)
                 ) || 0
         );
 
+function totalCarteraGrafico(valores) {
 
-    new Chart(
+    return valores.reduce(
+        (sum, value) =>
+            sum + Number(value || 0),
+        0
+    );
 
-        document.getElementById(
-            "graficoCartera"
-        ),
+}
+/* ======================================
+   ETIQUETAS DENTRO DEL DOUGHNUT
+   ====================================== */
 
-        {
+const doughnutLabelsPlugin = {
 
-            type: "doughnut",
+    id: "doughnutLabels",
 
-            data: {
+    afterDatasetsDraw(chart) {
 
-                labels:
-                    tickers,
+        const ctx =
+            chart.ctx;
 
-                datasets: [
+        const dataset =
+            chart.data.datasets[0];
 
-                    {
+        const meta =
+            chart.getDatasetMeta(0);
 
-                        data:
-                            valores
+        const total =
+            dataset.data.reduce(
+                (sum, value) =>
+                    sum + Number(value || 0),
+                0
+            );
 
-                    }
 
-                ]
+        meta.data.forEach(
+            (arc, index) => {
 
-            },
+                const value =
+                    Number(
+                        dataset.data[index]
+                    ) || 0;
 
-            options: {
 
-                responsive: true,
+                if (!value) {
+                    return;
+                }
 
-                maintainAspectRatio:
-                    false,
 
-                plugins: {
+                const percentage =
+                    (value / total) * 100;
 
-                    legend: {
 
-                        position:
-                            "right"
+                /*
+                   Posición en el centro
+                   del segmento
+                */
+
+                const angle =
+                    (
+                        arc.startAngle +
+                        arc.endAngle
+                    ) / 2;
+
+
+                /*
+                   Radio entre el centro
+                   y el borde del donut
+                */
+
+                const radius =
+                    (
+                        arc.innerRadius +
+                        arc.outerRadius
+                    ) / 2;
+
+
+                const x =
+                    arc.x +
+                    Math.cos(angle) *
+                    radius;
+
+
+                const y =
+                    arc.y +
+                    Math.sin(angle) *
+                    radius;
+
+
+                ctx.save();
+
+
+                ctx.textAlign =
+                    "center";
+
+                ctx.textBaseline =
+                    "middle";
+
+
+                /*
+                   Ticker
+                */
+
+                ctx.font =
+                    "bold 11px Arial";
+
+                ctx.fillStyle =
+                    "#ffffff";
+
+
+                ctx.fillText(
+                    chart.data.labels[index],
+                    x,
+                    y - 6
+                );
+
+
+                /*
+                   Porcentaje
+                */
+
+                ctx.font =
+                    "10px Arial";
+
+
+                ctx.fillText(
+                    percentage.toFixed(1) + "%",
+                    x,
+                    y + 7
+                );
+
+
+                ctx.restore();
+
+            }
+        );
+
+    }
+
+};
+
+
+/* ======================================
+   GRAFICO
+   ====================================== */
+
+new Chart(
+
+    document.getElementById(
+        "graficoCartera"
+    ),
+
+    {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: tickers,
+
+            datasets: [
+
+                {
+
+                    data: valores,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        plugins: [
+
+            doughnutLabelsPlugin
+
+        ],
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio:
+                false,
+
+            cutout: "55%",
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                },
+
+                tooltip: {
+
+                    callbacks: {
+
+                        label: function(
+                            context
+                        ) {
+
+                            const value =
+                                Number(
+                                    context.raw
+                                ) || 0;
+
+
+                            const porcentaje =
+                                totalCarteraGrafico(
+                                    valores
+                                ) > 0
+                                    ? (
+                                        value /
+                                        totalCarteraGrafico(
+                                            valores
+                                        )
+                                    ) * 100
+                                    : 0;
+
+
+                            return (
+                                " " +
+                                context.label +
+                                ": " +
+                                porcentaje.toFixed(1) +
+                                "%"
+                            );
+
+                        }
 
                     }
 
@@ -1998,7 +2190,9 @@ fetch(API_URL)
 
         }
 
-    );
+    }
+
+);
 
 
     /* ======================================
