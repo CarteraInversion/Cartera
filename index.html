@@ -1311,8 +1311,8 @@ function abrirPosicion(posicion) {
     ],
 
     [
-        "Precio actual",
-        euros(precioActual)
+       "Precio actual",
+    `<span id="precioActualModal">${euros(precioActual)}</span>`
     ],
 
     [
@@ -1415,7 +1415,87 @@ div.innerHTML = `
         }
     );
 
+/* ======================================
+   ACTUALIZAR PRECIO EN TIEMPO REAL
+   ====================================== */
 
+const precioActualModal =
+    document.getElementById(
+        "precioActualModal"
+    );
+
+
+if (precioActualModal) {
+
+    precioActualModal.textContent =
+        "Actualizando...";
+
+
+    const urlPrecio =
+        API_URL +
+        "?accion=precio&ticker=" +
+        encodeURIComponent(
+            ticker
+        );
+
+
+    fetch(urlPrecio)
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP " +
+                    response.status
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+            if (
+                data &&
+                data.precio !== undefined &&
+                data.precio !== null
+            ) {
+
+                precioActualModal.textContent =
+                    numero2(
+                        data.precio
+                    );
+
+            } else {
+
+                precioActualModal.textContent =
+                    euros(
+                        precioActual
+                    );
+
+            }
+
+        })
+
+        .catch(error => {
+
+            console.error(
+                "Error actualizando precio:",
+                error
+            );
+
+
+            precioActualModal.textContent =
+                euros(
+                    precioActual
+                );
+
+        });
+
+}
     /* ======================================
        CARGAR HISTORIAL
        ====================================== */
