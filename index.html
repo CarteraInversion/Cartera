@@ -1030,7 +1030,30 @@ function euros(valor) {
     ).format(valor);
 
 }
+    
+function eurosSinDecimales(valor) {
 
+    if (
+        valor === null ||
+        valor === undefined ||
+        isNaN(valor)
+    ) {
+
+        return "—";
+
+    }
+
+    return new Intl.NumberFormat(
+        "es-ES",
+        {
+            style: "currency",
+            currency: "EUR",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }
+    ).format(valor);
+
+}
 
 /* ==========================================
    FORMATO NUMERO
@@ -1270,64 +1293,64 @@ function abrirPosicion(posicion) {
     detalles.innerHTML = "";
 
 
-    const campos = [
+   const campos = [
 
-        [
-            "Títulos actuales",
-            Number(titulos).toLocaleString(
-                "es-ES",
-                {
-                    maximumFractionDigits: 2
-                }
-            )
-        ],
+    [
+        "Títulos actuales",
+        Number(titulos).toLocaleString(
+            "es-ES",
+            {
+                maximumFractionDigits: 2
+            }
+        )
+    ],
 
-        [
-            "Precio medio",
-            euros(precioMedio)
-        ],
+    [
+        "Precio medio",
+        euros(precioMedio)
+    ],
 
-        [
-            "Precio actual",
-            euros(precioActual)
-        ],
+    [
+        "Precio actual",
+        euros(precioActual)
+    ],
 
-        [
-            "Coste posición",
-            euros(coste)
-        ],
+    [
+        "Coste posición",
+        eurosSinDecimales(coste)
+    ],
 
-        [
-            "Valor actual",
-            euros(valorActual)
-        ],
+    [
+        "Valor actual",
+        eurosSinDecimales(valorActual)
+    ],
 
-        [
-            "Ganancia latente",
-            euros(gananciaLatente)
-        ],
+    [
+        "Ganancia latente",
+        eurosSinDecimales(gananciaLatente)
+    ],
 
-        [
-            "Ganancia realizada",
-            euros(gananciaRealizada)
-        ],
+    [
+        "Ganancia realizada",
+        eurosSinDecimales(gananciaRealizada)
+    ],
 
-        [
-            "Ganancia total",
-            euros(gananciaTotal)
-        ],
+    [
+        "Ganancia total",
+        eurosSinDecimales(gananciaTotal)
+    ],
 
-        [
-            "Rentabilidad",
-            porcentaje(rentabilidad)
-        ],
+    [
+        "Rentabilidad",
+        porcentaje(rentabilidad)
+    ],
 
-        [
-            "Peso cartera",
-            porcentaje(peso)
-        ]
+    [
+        "Peso cartera",
+        porcentaje(peso)
+    ]
 
-    ];
+];
 
 
     campos.forEach(
