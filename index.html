@@ -1953,22 +1953,40 @@ fetch(API_URL)
        GRAFICO
        ====================================== */
 
-    const tickers =
-        cartera.map(
-            p =>
-                p["Ticker"]
-        );
+    /* ======================================
+   ORDENAR GRAFICO DE MAYOR A MENOR PESO
+   ====================================== */
+
+const posicionesGrafico =
+    [...cartera].sort(
+
+        (a, b) =>
+
+            Number(
+                b["Valor actual €"]
+            ) -
+
+            Number(
+                a["Valor actual €"]
+            )
+
+    );
 
 
-    const valores =
-        cartera.map(
-            p =>
-                Number(
-                    p[
-                        "Valor actual €"
-                    ]
-                ) || 0
-        );
+const tickers =
+    posicionesGrafico.map(
+        p =>
+            p["Ticker"]
+    );
+
+
+const valores =
+    posicionesGrafico.map(
+        p =>
+            Number(
+                p["Valor actual €"]
+            ) || 0
+    );
 
 function totalCarteraGrafico(valores) {
 
