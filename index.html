@@ -1303,6 +1303,8 @@ let precioActualOrigen =
 
     detalles.innerHTML = "";
 
+    const monedaOrigen =
+    posicion["Moneda"] || "EUR";
 
    const campos = [
 
@@ -1317,8 +1319,8 @@ let precioActualOrigen =
     ],
 
     [
-        "Precio medio",
-        euros(precioMedio)
+    "Precio medio",
+    `${numero2(precioMedio)} ${monedaOrigen}`
     ],
 
     [
