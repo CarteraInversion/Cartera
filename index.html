@@ -1320,12 +1320,12 @@ let precioActualOrigen =
 
     [
     "Precio medio",
-    `${numero2(precioMedio)} ${monedaOrigen}`
+    `<span id="precioMedioModal">-</span>`
     ],
 
     [
-       "Precio actual",
-    `<span id="precioActualModal">${euros(precioActual)}</span>`
+    "Precio actual",
+    `<span id="precioActualModal">-</span>`
     ],
 
     [
@@ -1429,7 +1429,8 @@ div.innerHTML = `
     );
 
 /* ======================================
-   ACTUALIZAR PRECIO EN TIEMPO REAL
+   ACTUALIZAR PRECIO Y PRECIO MEDIO
+   EN MONEDA ORIGINAL
    ====================================== */
 
 const precioActualModal =
@@ -1437,78 +1438,77 @@ const precioActualModal =
         "precioActualModal"
     );
 
+const precioMedioModal =
+    document.getElementById(
+        "precioMedioModal"
+    );
 
-if (precioActualModal) {
+const urlPrecio =
+    API_URL +
+    "?accion=precio&ticker=" +
+    encodeURIComponent(
+        ticker
+    );
 
-    precioActualModal.textContent =
-        "Actualizando...";
+fetch(urlPrecio)
 
+    .then(response => {
 
-    const urlPrecio =
-        API_URL +
-        "?accion=precio&ticker=" +
-        encodeURIComponent(
-            ticker
-        );
+        if (!response.ok) {
 
-
-    fetch(urlPrecio)
-
-        .then(response => {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "HTTP " +
-                    response.status
-                );
-
-            }
-
-            return response.json();
-
-        })
-
-        .then(data => {
-
-            if (
-                data &&
-                data.precio !== undefined &&
-                data.precio !== null
-            ) {
-
-                precioActualModal.textContent =
-                    numero2(
-                        data.precio
-                    );
-
-            } else {
-
-                precioActualModal.textContent =
-                    euros(
-                        precioActual
-                    );
-
-            }
-
-        })
-
-        .catch(error => {
-
-            console.error(
-                "Error actualizando precio:",
-                error
+            throw new Error(
+                "HTTP " +
+                response.status
             );
 
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        if (
+            data &&
+            data.precio !== undefined &&
+            data.precioMedio !== undefined &&
+            data.moneda
+        ) {
 
             precioActualModal.textContent =
-                euros(
-                    precioActual
-                );
+                numero2(
+                    data.precio
+                ) +
+                " " +
+                data.moneda;
 
-        });
 
-}
+            precioMedioModal.textContent =
+                numero2(
+                    data.precioMedio
+                ) +
+                " " +
+                data.moneda;
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Error actualizando precios:",
+            error
+        );
+
+        precioActualModal.textContent =
+            "—";
+
+        precioMedioModal.textContent =
+            "—";
+
+    });
     /* ======================================
        CARGAR HISTORIAL
        ====================================== */
