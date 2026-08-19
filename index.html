@@ -86,7 +86,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(5, 1fr);
 
     gap: 20px;
 
@@ -748,6 +748,20 @@ tbody tr:hover {
 
     </div>
 
+    <div class="card">
+
+    <div class="card-title">
+        Liquidez
+    </div>
+
+    <div
+        class="card-value"
+        id="liquidezPorcentaje"
+    >
+        —
+    </div>
+
+</div>
 
 </div>
 
@@ -1903,6 +1917,32 @@ fetch(API_URL)
        CALCULOS
        ====================================== */
 
+    /* ======================================
+   LIQUIDEZ
+   ====================================== */
+
+let liquidez = 0;
+
+for (const posicion of cartera) {
+
+    const valorLiquidez =
+        Number(
+            posicion["Liquidez €"]
+        );
+
+    if (
+        !isNaN(valorLiquidez) &&
+        valorLiquidez !== 0
+    ) {
+
+        liquidez =
+            valorLiquidez;
+
+        break;
+
+    }
+
+}
     let valorTotal = 0;
 
     let costeTotal = 0;
@@ -1960,7 +2000,16 @@ fetch(API_URL)
         }
     );
 
+const valorTotalCartera =
+    valorTotal + liquidez;
 
+
+const porcentajeLiquidez =
+    valorTotalCartera > 0
+        ? liquidez /
+          valorTotalCartera
+        : 0;
+    
     const rentabilidad =
         costeTotal !== 0
             ? gananciaTotal /
@@ -1973,9 +2022,9 @@ fetch(API_URL)
        ====================================== */
 
     document.getElementById(
-        "valorTotal"
+    "valorTotal"
     ).textContent =
-        euros(valorTotal);
+    euros(valorTotalCartera);
 
 
     document.getElementById(
@@ -1994,6 +2043,13 @@ fetch(API_URL)
         "numeroPosiciones"
     ).textContent =
         cartera.length;
+
+    document.getElementById(
+    "liquidezPorcentaje"
+    ).textContent =
+    porcentaje(
+        porcentajeLiquidez
+    );
 
 
     /* ======================================
@@ -2684,14 +2740,25 @@ new Chart(
                 );
 
 
-            peso.textContent =
-                porcentaje(
-                    Number(
-                        posicion[
-                            "Peso cartera %"
-                        ]
-                    ) || 0
-                );
+            const valorPosicion =
+    Number(
+        posicion[
+            "Valor actual €"
+        ]
+    ) || 0;
+
+
+const pesoCartera =
+    valorTotalCartera > 0
+        ? valorPosicion /
+          valorTotalCartera
+        : 0;
+
+
+peso.textContent =
+    porcentaje(
+        pesoCartera
+    );
 
 
             tr.appendChild(
