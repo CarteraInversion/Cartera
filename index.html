@@ -1219,18 +1219,29 @@ function abrirPosicion(posicion) {
 
 
     const precioMedio =
-        titulos !== 0
-            ? coste / titulos
-            : 0;
+    titulos !== 0
+        ? coste / titulos
+        : 0;
 
 
-    const precioActual =
-        Number(
-            posicion[
-                "Precio actual €"
-            ]
-        ) || 0;
+const precioActual =
+    Number(
+        posicion[
+            "Precio actual €"
+        ]
+    ) || 0;
 
+
+const monedaOrigen =
+    posicion[
+        "Moneda"
+    ] || "EUR";
+    
+let precioMedioOrigen =
+    precioMedio;
+
+let precioActualOrigen =
+    precioActual;
 
     const valorActual =
         Number(
