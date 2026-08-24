@@ -765,7 +765,12 @@ tbody tr:hover {
 
 }
 
+.riesgo-alerta {
 
+    color: #dc2626;
+
+}
+    
 @media (max-width: 600px) {
 
     .riesgo-detalles {
@@ -2384,27 +2389,56 @@ if (posicionMayorAportacion) {
         ) || 0;
 
 
+    const elementoMayorAportacion =
     document.getElementById(
         "mayorAportacionRiesgo"
-    ).textContent =
+    );
 
-        posicionMayorAportacion[
-            "Ticker"
-        ] +
 
-        " — " +
+const porcentajeMostrado =
+    (
+        porcentajeRiesgo * 100
+    ).toLocaleString(
+        "es-ES",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
 
-        (
-            porcentajeRiesgo * 100
-        ).toLocaleString(
-            "es-ES",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        ) +
 
-        "%";
+elementoMayorAportacion.textContent =
+
+    posicionMayorAportacion[
+        "Ticker"
+    ] +
+
+    " — " +
+
+    porcentajeMostrado +
+
+    "%";
+
+
+/* ======================================
+   ALERTA > 25%
+   ====================================== */
+
+if (
+    porcentajeRiesgo > 0.25
+) {
+
+    elementoMayorAportacion.classList.add(
+        "riesgo-alerta"
+    );
+
+} else {
+
+    elementoMayorAportacion.classList.remove(
+        "riesgo-alerta"
+    );
+
+}
 
 }
     
