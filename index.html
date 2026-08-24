@@ -649,7 +649,133 @@ tbody tr:hover {
     }
 
 }
+/* ==========================================
+   RIESGO CARTERA
+   ========================================== */
 
+.riesgo-panel {
+
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+}
+
+.riesgo-panel h2 {
+
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+
+}
+
+.riesgo-valor {
+
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+
+}
+
+.riesgo-nivel {
+
+    margin-bottom: 22px;
+
+}
+
+.riesgo-badge {
+
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+
+}
+
+
+/* 0 - 2 → MUY BAJO */
+.riesgo-muy-bajo {
+
+    background: #d7f0df;
+    color: #137a3a;
+
+}
+
+
+/* >2 - 4 → BAJO */
+.riesgo-bajo {
+
+    background: #e8f3cc;
+    color: #5f8f08;
+
+}
+
+
+/* >4 - 6 → MODERADO */
+.riesgo-moderado {
+
+    background: #fff3bf;
+    color: #a16207;
+
+}
+
+
+/* >6 - 8 → ALTO */
+.riesgo-alto {
+
+    background: #fff0df;
+    color: #b66a00;
+
+}
+
+
+/* >8 - 10 → MUY ALTO */
+.riesgo-muy-alto {
+
+    background: #f8dede;
+    color: #b42318;
+
+}
+
+
+.riesgo-detalles {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+
+    border-top: 1px solid #eef0f2;
+    padding-top: 18px;
+
+}
+
+.riesgo-dato span {
+
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+
+}
+
+.riesgo-dato strong {
+
+    font-size: 16px;
+
+}
+
+
+@media (max-width: 600px) {
+
+    .riesgo-detalles {
+
+        grid-template-columns: 1fr;
+        gap: 15px;
+
+    }
+
+}
 </style>
 
 </head>
@@ -837,7 +963,65 @@ tbody tr:hover {
 
 </div>
 
+<!-- ==========================================
+     RIESGO CARTERA
+     ========================================== -->
 
+<div class="panel riesgo-panel">
+
+    <h2>
+        Riesgo cartera
+    </h2>
+
+    <div
+        id="riesgoValor"
+        class="riesgo-valor"
+    >
+        —
+    </div>
+
+    <div
+        id="riesgoNivel"
+        class="riesgo-nivel"
+    >
+        <span
+            id="riesgoNivelTexto"
+            class="riesgo-badge"
+        >
+            —
+        </span>
+    </div>
+
+    <div class="riesgo-detalles">
+
+        <div class="riesgo-dato">
+
+            <span>
+                Mayor riesgo
+            </span>
+
+            <strong id="mayorRiesgo">
+                —
+            </strong>
+
+        </div>
+
+        <div class="riesgo-dato">
+
+            <span>
+                Mayor aportación al riesgo
+            </span>
+
+            <strong id="mayorAportacionRiesgo">
+                —
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+    
 <!-- ==========================================
      MÁS / MENOS APORTAN
      ========================================== -->
@@ -2016,7 +2200,214 @@ const porcentajeLiquidez =
               costeTotal
             : 0;
 
+/* ======================================
+   RIESGO CARTERA
+   ====================================== */
 
+const posicionConRiesgo =
+    cartera.find(
+        posicion =>
+            posicion["Riesgo Cartera"] !== undefined &&
+            posicion["Riesgo Cartera"] !== ""
+    );
+
+
+const riesgoCartera =
+    posicionConRiesgo
+        ? Number(
+            posicionConRiesgo[
+                "Riesgo Cartera"
+            ]
+        ) || 0
+        : 0;
+
+
+/* ======================================
+   MAYOR RIESGO INDIVIDUAL
+   ====================================== */
+
+const posicionMayorRiesgo =
+    [...cartera]
+        .filter(
+            posicion =>
+                posicion["Riesgo"] !== undefined &&
+                posicion["Riesgo"] !== ""
+        )
+        .sort(
+            (a, b) =>
+                Number(b["Riesgo"]) -
+                Number(a["Riesgo"])
+        )[0];
+
+
+/* ======================================
+   MAYOR APORTACIÓN AL RIESGO
+   ====================================== */
+
+const posicionMayorAportacion =
+    [...cartera]
+        .filter(
+            posicion =>
+                posicion["% Riesgo Cartera"] !== undefined &&
+                posicion["% Riesgo Cartera"] !== ""
+        )
+        .sort(
+            (a, b) =>
+                Number(
+                    b["% Riesgo Cartera"]
+                ) -
+                Number(
+                    a["% Riesgo Cartera"]
+                )
+        )[0];
+
+
+/* ======================================
+   CLASIFICACIÓN DEL RIESGO
+   ====================================== */
+
+let riesgoNivelTexto = "";
+let riesgoClase = "";
+
+
+if (riesgoCartera <= 2) {
+
+    riesgoNivelTexto = "Muy bajo";
+    riesgoClase = "riesgo-muy-bajo";
+
+}
+
+else if (riesgoCartera <= 4) {
+
+    riesgoNivelTexto = "Bajo";
+    riesgoClase = "riesgo-bajo";
+
+}
+
+else if (riesgoCartera <= 6) {
+
+    riesgoNivelTexto = "Moderado";
+    riesgoClase = "riesgo-moderado";
+
+}
+
+else if (riesgoCartera <= 8) {
+
+    riesgoNivelTexto = "Alto";
+    riesgoClase = "riesgo-alto";
+
+}
+
+else {
+
+    riesgoNivelTexto = "Muy alto";
+    riesgoClase = "riesgo-muy-alto";
+
+}
+
+
+/* ======================================
+   MOSTRAR RIESGO
+   ====================================== */
+
+document.getElementById(
+    "riesgoValor"
+).textContent =
+    riesgoCartera.toLocaleString(
+        "es-ES",
+        {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        }
+    ) +
+    " / 10";
+
+
+const riesgoNivelTextoElemento =
+    document.getElementById(
+        "riesgoNivelTexto"
+    );
+
+
+riesgoNivelTextoElemento.textContent =
+    riesgoNivelTexto;
+
+
+riesgoNivelTextoElemento.className =
+    "riesgo-badge " +
+    riesgoClase;
+
+
+/* ======================================
+   MAYOR RIESGO
+   ====================================== */
+
+if (posicionMayorRiesgo) {
+
+    document.getElementById(
+        "mayorRiesgo"
+    ).textContent =
+
+        posicionMayorRiesgo[
+            "Ticker"
+        ] +
+
+        " — " +
+
+        Number(
+            posicionMayorRiesgo[
+                "Riesgo"
+            ]
+        ).toLocaleString(
+            "es-ES",
+            {
+                maximumFractionDigits: 1
+            }
+        ) +
+
+        "/10";
+
+}
+
+
+/* ======================================
+   MAYOR APORTACIÓN AL RIESGO
+   ====================================== */
+
+if (posicionMayorAportacion) {
+
+    const porcentajeRiesgo =
+        Number(
+            posicionMayorAportacion[
+                "% Riesgo Cartera"
+            ]
+        ) || 0;
+
+
+    document.getElementById(
+        "mayorAportacionRiesgo"
+    ).textContent =
+
+        posicionMayorAportacion[
+            "Ticker"
+        ] +
+
+        " — " +
+
+        (
+            porcentajeRiesgo * 100
+        ).toLocaleString(
+            "es-ES",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        ) +
+
+        "%";
+
+}
+    
     /* ======================================
        TARJETAS
        ====================================== */
