@@ -805,6 +805,77 @@ tbody tr:hover {
     }
 
 }
+    /* ==========================================
+   RIESGO EN TABLA
+   ========================================== */
+
+.riesgo-tabla {
+
+    display: inline-block;
+
+    min-width: 22px;
+
+    padding: 4px 7px;
+
+    border-radius: 6px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+/* 0 - 2 */
+.riesgo-tabla-muy-bajo {
+
+    background: #d7f0df;
+
+    color: #137a3a;
+
+}
+
+
+/* >2 - 4 */
+.riesgo-tabla-bajo {
+
+    background: #e8f3cc;
+
+    color: #5f8f08;
+
+}
+
+
+/* >4 - 6 */
+.riesgo-tabla-moderado {
+
+    background: #fff3bf;
+
+    color: #a16207;
+
+}
+
+
+/* >6 - 8 */
+.riesgo-tabla-alto {
+
+    background: #fff0df;
+
+    color: #b66a00;
+
+}
+
+
+/* >8 - 10 */
+.riesgo-tabla-muy-alto {
+
+    background: #f8dede;
+
+    color: #b42318;
+
+}
 </style>
 
 </head>
@@ -1130,6 +1201,10 @@ tbody tr:hover {
 
                 <th>
                     Rentabilidad
+                </th>
+
+                <th>
+                    Riesgo ↑
                 </th>
 
                 <th>
@@ -3188,7 +3263,84 @@ new Chart(
             tr.appendChild(
                 rentabilidad
             );
+/* RIESGO */
 
+const riesgo =
+    document.createElement(
+        "td"
+    );
+
+
+const riesgoValor =
+    Number(
+        posicion[
+            "Riesgo"
+        ]
+    );
+
+
+if (!isNaN(riesgoValor)) {
+
+    riesgo.textContent =
+        riesgoValor.toLocaleString(
+            "es-ES",
+            {
+                maximumFractionDigits: 1
+            }
+        );
+
+
+    if (riesgoValor <= 2) {
+
+        riesgo.className =
+            "riesgo-tabla riesgo-tabla-muy-bajo";
+
+    }
+
+    else if (riesgoValor <= 4) {
+
+        riesgo.className =
+            "riesgo-tabla riesgo-tabla-bajo";
+
+    }
+
+    else if (riesgoValor <= 6) {
+
+        riesgo.className =
+            "riesgo-tabla riesgo-tabla-moderado";
+
+    }
+
+    else if (riesgoValor <= 8) {
+
+        riesgo.className =
+            "riesgo-tabla riesgo-tabla-alto";
+
+    }
+
+    else {
+
+        riesgo.className =
+            "riesgo-tabla riesgo-tabla-muy-alto";
+
+    }
+
+}
+
+else {
+
+    riesgo.textContent =
+        "—";
+
+    riesgo.className =
+        "riesgo-tabla";
+
+}
+
+
+tr.appendChild(
+    riesgo
+);
 
             /* PESO */
 
