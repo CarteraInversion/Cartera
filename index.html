@@ -670,9 +670,33 @@ tbody tr:hover {
 
 .riesgo-valor {
 
-    font-size: 32px;
-    font-weight: bold;
     margin-bottom: 10px;
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 3px;
+
+}
+
+.riesgo-numero {
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+}
+
+.riesgo-escala {
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    color: #6b7280;
 
 }
 
@@ -2317,16 +2341,25 @@ else {
 
 document.getElementById(
     "riesgoValor"
-).textContent =
-    riesgoCartera.toLocaleString(
-        "es-ES",
-        {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1
-        }
-    ) +
-    " / 10";
+).innerHTML =
 
+    `
+    <span class="riesgo-numero">
+        ${
+            riesgoCartera.toLocaleString(
+                "es-ES",
+                {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1
+                }
+            )
+        }
+    </span>
+
+    <span class="riesgo-escala">
+        /10
+    </span>
+    `;
 
 const riesgoNivelTextoElemento =
     document.getElementById(
