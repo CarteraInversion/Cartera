@@ -811,11 +811,17 @@ tbody tr:hover {
 
 .riesgo-tabla {
 
-    display: inline-block;
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     min-width: 22px;
 
-    padding: 4px 7px;
+    height: 24px;
+
+    padding: 0 7px;
 
     border-radius: 6px;
 
@@ -3263,6 +3269,8 @@ new Chart(
             tr.appendChild(
                 rentabilidad
             );
+
+
 /* RIESGO */
 
 const riesgo =
@@ -3281,7 +3289,13 @@ const riesgoValor =
 
 if (!isNaN(riesgoValor)) {
 
-    riesgo.textContent =
+    const riesgoBadge =
+        document.createElement(
+            "span"
+        );
+
+
+    riesgoBadge.textContent =
         riesgoValor.toLocaleString(
             "es-ES",
             {
@@ -3290,50 +3304,60 @@ if (!isNaN(riesgoValor)) {
         );
 
 
+    riesgoBadge.className =
+        "riesgo-tabla";
+
+
     if (riesgoValor <= 2) {
 
-        riesgo.className =
-            "riesgo-tabla riesgo-tabla-muy-bajo";
+        riesgoBadge.classList.add(
+            "riesgo-tabla-muy-bajo"
+        );
 
     }
 
     else if (riesgoValor <= 4) {
 
-        riesgo.className =
-            "riesgo-tabla riesgo-tabla-bajo";
+        riesgoBadge.classList.add(
+            "riesgo-tabla-bajo"
+        );
 
     }
 
     else if (riesgoValor <= 6) {
 
-        riesgo.className =
-            "riesgo-tabla riesgo-tabla-moderado";
+        riesgoBadge.classList.add(
+            "riesgo-tabla-moderado"
+        );
 
     }
 
     else if (riesgoValor <= 8) {
 
-        riesgo.className =
-            "riesgo-tabla riesgo-tabla-alto";
+        riesgoBadge.classList.add(
+            "riesgo-tabla-alto"
+        );
 
     }
 
     else {
 
-        riesgo.className =
-            "riesgo-tabla riesgo-tabla-muy-alto";
+        riesgoBadge.classList.add(
+            "riesgo-tabla-muy-alto"
+        );
 
     }
+
+
+    riesgo.appendChild(
+        riesgoBadge
+    );
 
 }
 
 else {
 
-    riesgo.textContent =
-        "—";
-
-    riesgo.className =
-        "riesgo-tabla";
+    riesgo.textContent = "—";
 
 }
 
@@ -3341,7 +3365,6 @@ else {
 tr.appendChild(
     riesgo
 );
-
             /* PESO */
 
             const peso =
