@@ -1447,7 +1447,251 @@ tbody tr:hover {
 const API_URL =
     "https://script.google.com/macros/s/AKfycbxI2TECxhMIyi7Y3M4ET9Qy2lvcWJEmroqHaIvOdrZkoLCudGGx5HiekpsJ4BxkFMHfLg/exec";
 
+/* ==========================================
+   GRAFICO RENTABILIDAD ANUAL
+   ========================================== */
 
+let graficoRentabilidad = null;
+
+
+async function cargarRentabilidad() {
+
+    const estado =
+        document.getElementById(
+            "estadoRentabilidad"
+        );
+
+    try {
+
+        estado.textContent =
+            "Cargando rentabilidad...";
+
+
+        const respuesta =
+            await fetch(
+                API_URL +
+                "?accion=rentabilidad&t=" +
+                Date.now()
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "HTTP " +
+                respuesta.status
+            );
+
+        }
+
+
+        const datos =
+            await respuesta.json();
+
+
+        if (
+            !datos ||
+            !Array.isArray(
+                datos.anual
+            )
+        ) {
+
+            throw new Error(
+                "No se han recibido los datos anuales."
+            );
+
+        }
+
+
+        const años =
+            datos.anual.map(
+                fila =>
+                    fila.año
+            );
+
+
+        const cartera =
+            datos.anual.map(
+                fila =>
+                    Number(
+                        fila.cartera
+                    ) * 100
+            );
+
+
+        const sp500 =
+            datos.anual.map(
+                fila =>
+                    Number(
+                        fila.sp500
+                    ) * 100
+            );
+
+
+        const nasdaq =
+            datos.anual.map(
+                fila =>
+                    Number(
+                        fila.nasdaq
+                    ) * 100
+            );
+
+
+        const canvas =
+            document.getElementById(
+                "graficoRentabilidad"
+            );
+
+
+        if (graficoRentabilidad) {
+
+            graficoRentabilidad.destroy();
+
+        }
+
+
+        graficoRentabilidad =
+            new Chart(
+                canvas,
+                {
+
+                    type:
+                        "bar",
+
+                    data: {
+
+                        labels:
+                            años,
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    "Mi cartera",
+
+                                data:
+                                    cartera
+
+                            },
+
+                            {
+
+                                label:
+                                    "S&P 500",
+
+                                data:
+                                    sp500
+
+                            },
+
+                            {
+
+                                label:
+                                    "Nasdaq-100",
+
+                                data:
+                                    nasdaq
+
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive:
+                            true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position:
+                                    "top"
+
+                            },
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label:
+                                        function(
+                                            context
+                                        ) {
+
+                                            return (
+                                                " " +
+                                                context.dataset.label +
+                                                ": " +
+                                                context.raw.toFixed(2) +
+                                                "%"
+                                            );
+
+                                        }
+
+                                }
+
+                            }
+
+                        },
+
+
+                        scales: {
+
+                            y: {
+
+                                ticks: {
+
+                                    callback:
+                                        function(
+                                            value
+                                        ) {
+
+                                            return (
+                                                value +
+                                                "%"
+                                            );
+
+                                        }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+        estado.textContent =
+            "Datos actualizados correctamente.";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error rentabilidad:",
+            error
+        );
+
+        estado.textContent =
+            "Error al cargar la rentabilidad.";
+
+    }
+
+}
+    
 /* ==========================================
    FORMATO EUROS
    ========================================== */
@@ -3607,6 +3851,8 @@ function mostrarVista(vista) {
         vistaRentabilidad.style.display =
             "block";
 
+        cargarRentabilidad();
+        
         tabCartera.classList.remove(
             "activa"
         );
