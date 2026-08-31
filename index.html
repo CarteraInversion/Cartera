@@ -1453,213 +1453,174 @@ const API_URL =
 
 let graficoRentabilidad = null;
 
-
-async function cargarRentabilidad() {
+function cargarRentabilidad() {
 
     const estado =
         document.getElementById(
             "estadoRentabilidad"
         );
 
-    try {
+    estado.textContent =
+        "Cargando rentabilidad...";
 
-        estado.textContent =
-            "Cargando rentabilidad...";
+    fetch(
+        API_URL +
+        "?accion=rentabilidad&t=" +
+        Date.now()
+    )
 
+    .then(
+        response =>
+            response.json()
+    )
 
-        const respuesta =
-            await fetch(
-                API_URL +
-                "?accion=rentabilidad&t=" +
-                Date.now()
+    .then(
+        datos => {
+
+            console.log(
+                "Datos rentabilidad:",
+                datos
             );
 
+            if (
+                !datos ||
+                !Array.isArray(
+                    datos.anual
+                )
+            ) {
 
-        if (!respuesta.ok) {
+                throw new Error(
+                    "El endpoint no devuelve el bloque anual."
+                );
 
-            throw new Error(
-                "HTTP " +
-                respuesta.status
-            );
+            }
 
-        }
+            const años =
+                datos.anual.map(
+                    fila =>
+                        fila.año
+                );
 
+            const cartera =
+                datos.anual.map(
+                    fila =>
+                        Number(
+                            fila.cartera
+                        ) * 100
+                );
 
-        const datos =
-            await respuesta.json();
+            const sp500 =
+                datos.anual.map(
+                    fila =>
+                        Number(
+                            fila.sp500
+                        ) * 100
+                );
 
+            const nasdaq =
+                datos.anual.map(
+                    fila =>
+                        Number(
+                            fila.nasdaq
+                        ) * 100
+                );
 
-        if (
-            !datos ||
-            !Array.isArray(
-                datos.anual
-            )
-        ) {
+            const canvas =
+                document.getElementById(
+                    "graficoRentabilidad"
+                );
 
-            throw new Error(
-                "No se han recibido los datos anuales."
-            );
+            if (
+                graficoRentabilidad
+            ) {
 
-        }
+                graficoRentabilidad.destroy();
 
+            }
 
-        const años =
-            datos.anual.map(
-                fila =>
-                    fila.año
-            );
+            graficoRentabilidad =
+                new Chart(
+                    canvas,
+                    {
 
+                        type: "bar",
 
-        const cartera =
-            datos.anual.map(
-                fila =>
-                    Number(
-                        fila.cartera
-                    ) * 100
-            );
+                        data: {
 
+                            labels:
+                                años,
 
-        const sp500 =
-            datos.anual.map(
-                fila =>
-                    Number(
-                        fila.sp500
-                    ) * 100
-            );
+                            datasets: [
 
-
-        const nasdaq =
-            datos.anual.map(
-                fila =>
-                    Number(
-                        fila.nasdaq
-                    ) * 100
-            );
-
-
-        const canvas =
-            document.getElementById(
-                "graficoRentabilidad"
-            );
-
-
-        if (graficoRentabilidad) {
-
-            graficoRentabilidad.destroy();
-
-        }
-
-
-        graficoRentabilidad =
-            new Chart(
-                canvas,
-                {
-
-                    type:
-                        "bar",
-
-                    data: {
-
-                        labels:
-                            años,
-
-                        datasets: [
-
-                            {
-
-                                label:
-                                    "Mi cartera",
-
-                                data:
-                                    cartera
-
-                            },
-
-                            {
-
-                                label:
-                                    "S&P 500",
-
-                                data:
-                                    sp500
-
-                            },
-
-                            {
-
-                                label:
-                                    "Nasdaq-100",
-
-                                data:
-                                    nasdaq
-
-                            }
-
-                        ]
-
-                    },
-
-
-                    options: {
-
-                        responsive:
-                            true,
-
-                        maintainAspectRatio:
-                            false,
-
-                        plugins: {
-
-                            legend: {
-
-                                position:
-                                    "top"
-
-                            },
-
-                            tooltip: {
-
-                                callbacks: {
+                                {
 
                                     label:
-                                        function(
-                                            context
-                                        ) {
+                                        "Mi cartera",
 
-                                            return (
-                                                " " +
-                                                context.dataset.label +
-                                                ": " +
-                                                context.raw.toFixed(2) +
-                                                "%"
-                                            );
+                                    data:
+                                        cartera
 
-                                        }
+                                },
+
+                                {
+
+                                    label:
+                                        "S&P 500",
+
+                                    data:
+                                        sp500
+
+                                },
+
+                                {
+
+                                    label:
+                                        "Nasdaq-100",
+
+                                    data:
+                                        nasdaq
 
                                 }
 
-                            }
+                            ]
 
                         },
 
+                        options: {
 
-                        scales: {
+                            responsive: true,
 
-                            y: {
+                            maintainAspectRatio:
+                                false,
 
-                                ticks: {
+                            plugins: {
 
-                                    callback:
-                                        function(
-                                            value
-                                        ) {
+                                legend: {
 
-                                            return (
-                                                value +
-                                                "%"
-                                            );
+                                    display: true,
 
-                                        }
+                                    position: "top"
+
+                                }
+
+                            },
+
+                            scales: {
+
+                                y: {
+
+                                    ticks: {
+
+                                        callback:
+                                            function(
+                                                value
+                                            ) {
+
+                                                return value + "%";
+
+                                            }
+
+                                    }
 
                                 }
 
@@ -1668,27 +1629,28 @@ async function cargarRentabilidad() {
                         }
 
                     }
+                );
 
-                }
+            estado.textContent =
+                "Datos actualizados correctamente.";
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "Error rentabilidad:",
+                error
             );
 
+            estado.textContent =
+                "Error al cargar la rentabilidad: " +
+                error.message;
 
-        estado.textContent =
-            "Datos actualizados correctamente.";
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Error rentabilidad:",
-            error
-        );
-
-        estado.textContent =
-            "Error al cargar la rentabilidad.";
-
-    }
+        }
+    );
 
 }
     
@@ -3850,7 +3812,9 @@ function mostrarVista(vista) {
 
         vistaRentabilidad.style.display =
             "block";
-       
+        
+        cargarRentabilidad();
+        
         tabCartera.classList.remove(
             "activa"
         );
