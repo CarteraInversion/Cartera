@@ -1605,26 +1605,40 @@ function cargarRentabilidad() {
 
                             },
 
-                            scales: {
+                           scales: {
 
-                                y: {
+    x: {
 
-                                    ticks: {
+        grid: {
 
-                                        callback:
-                                            function(
-                                                value
-                                            ) {
+            display: false
 
-                                                return value + "%";
+        }
 
-                                            }
+    },
 
-                                    }
+    y: {
 
-                                }
+        grid: {
 
-                            }
+            color: "#eeeeee"
+
+        },
+
+        ticks: {
+
+            callback:
+                function(value) {
+
+                    return value + "%";
+
+                }
+
+        }
+
+    }
+
+}
 
                         }
 
