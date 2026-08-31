@@ -1020,7 +1020,40 @@ tbody tr:hover {
 
 </div>
 
+<!-- ==========================================
+     VISTA RENTABILIDAD
+     ========================================== -->
 
+<div
+    id="vistaRentabilidad"
+    class="vista-rentabilidad"
+>
+
+    <div class="panel rentabilidad-panel">
+
+        <h2>
+            Rentabilidad anual
+        </h2>
+
+        <div class="rentabilidad-chart">
+
+            <canvas
+                id="graficoRentabilidad"
+            >
+            </canvas>
+
+        </div>
+
+        <div
+            id="estadoRentabilidad"
+            class="rentabilidad-estado"
+        >
+            Cargando rentabilidad...
+        </div>
+
+    </div>
+
+</div>
 <!-- ==========================================
      RESUMEN
      ========================================== -->
@@ -3536,7 +3569,74 @@ peso.textContent =
 
     }
 );
+/* ==========================================
+   CAMBIAR ENTRE VISTAS
+   ========================================== */
 
+function mostrarVista(vista) {
+
+    const contenidoCartera =
+        document.querySelectorAll(
+            ".header, .resumen, .grid, .riesgo-panel, .aportaciones, .tabla-panel"
+        );
+
+    const vistaRentabilidad =
+        document.getElementById(
+            "vistaRentabilidad"
+        );
+
+    const tabCartera =
+        document.getElementById(
+            "tabCartera"
+        );
+
+    const tabRentabilidad =
+        document.getElementById(
+            "tabRentabilidad"
+        );
+
+
+    if (vista === "rentabilidad") {
+
+        contenidoCartera.forEach(
+            elemento => {
+                elemento.style.display = "none";
+            }
+        );
+
+        vistaRentabilidad.style.display =
+            "block";
+
+        tabCartera.classList.remove(
+            "activa"
+        );
+
+        tabRentabilidad.classList.add(
+            "activa"
+        );
+
+    } else {
+
+        contenidoCartera.forEach(
+            elemento => {
+                elemento.style.display = "";
+            }
+        );
+
+        vistaRentabilidad.style.display =
+            "none";
+
+        tabRentabilidad.classList.remove(
+            "activa"
+        );
+
+        tabCartera.classList.add(
+            "activa"
+        );
+
+    }
+
+}
 </script>
 
 </body>
