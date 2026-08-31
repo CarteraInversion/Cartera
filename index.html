@@ -308,6 +308,94 @@ tbody tr:hover {
     color: #6b7280;
 }
 
+    /* ==========================================
+   PESTAÑAS
+   ========================================== */
+
+.tabs {
+
+    display: flex;
+
+    gap: 0;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+}
+
+.tab {
+
+    background: transparent;
+
+    border: none;
+
+    border-bottom: 2px solid transparent;
+
+    border-radius: 0;
+
+    padding: 12px 18px;
+
+    font-size: 13px;
+
+    color: #6b7280;
+
+    cursor: pointer;
+
+}
+
+.tab:hover {
+
+    background: transparent;
+
+    color: #111827;
+
+}
+
+.tab.activa {
+
+    color: #111827;
+
+    border-bottom-color: #111827;
+
+    font-weight: 600;
+
+}
+
+
+/* ==========================================
+   VISTA RENTABILIDAD
+   ========================================== */
+
+.vista-rentabilidad {
+
+    display: none;
+
+}
+
+.rentabilidad-panel {
+
+    margin-bottom: 25px;
+
+}
+
+.rentabilidad-chart {
+
+    position: relative;
+
+    height: 430px;
+
+}
+
+.rentabilidad-estado {
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    margin-top: 8px;
+
+}
 
 /* ==========================================
    MODAL
@@ -892,6 +980,29 @@ tbody tr:hover {
 
 <div class="container">
 
+    <!-- ==========================================
+     NAVEGACIÓN
+     ========================================== -->
+
+<div class="tabs">
+
+    <button
+        id="tabCartera"
+        class="tab activa"
+        onclick="mostrarVista('cartera')"
+    >
+        Cartera
+    </button>
+
+    <button
+        id="tabRentabilidad"
+        class="tab"
+        onclick="mostrarVista('rentabilidad')"
+    >
+        Rentabilidad
+    </button>
+
+</div>
 
 <!-- ==========================================
      CABECERA
