@@ -1451,7 +1451,12 @@ const API_URL =
    GRAFICO RENTABILIDAD ANUAL
    ========================================== */
 
+/* ==========================================
+   GRAFICO RENTABILIDAD ANUAL
+   ========================================== */
+
 let graficoRentabilidad = null;
+
 
 function cargarRentabilidad() {
 
@@ -1460,8 +1465,10 @@ function cargarRentabilidad() {
             "estadoRentabilidad"
         );
 
+
     estado.textContent =
         "Cargando rentabilidad...";
+
 
     fetch(
         API_URL +
@@ -1469,10 +1476,12 @@ function cargarRentabilidad() {
         Date.now()
     )
 
+
     .then(
         response =>
             response.json()
     )
+
 
     .then(
         datos => {
@@ -1481,6 +1490,7 @@ function cargarRentabilidad() {
                 "Datos rentabilidad:",
                 datos
             );
+
 
             if (
                 !datos ||
@@ -1495,11 +1505,13 @@ function cargarRentabilidad() {
 
             }
 
+
             const años =
                 datos.anual.map(
                     fila =>
                         fila.año
                 );
+
 
             const cartera =
                 datos.anual.map(
@@ -1509,6 +1521,7 @@ function cargarRentabilidad() {
                         ) * 100
                 );
 
+
             const sp500 =
                 datos.anual.map(
                     fila =>
@@ -1516,6 +1529,7 @@ function cargarRentabilidad() {
                             fila.sp500
                         ) * 100
                 );
+
 
             const nasdaq =
                 datos.anual.map(
@@ -1525,10 +1539,12 @@ function cargarRentabilidad() {
                         ) * 100
                 );
 
+
             const canvas =
                 document.getElementById(
                     "graficoRentabilidad"
                 );
+
 
             if (
                 graficoRentabilidad
@@ -1538,6 +1554,7 @@ function cargarRentabilidad() {
 
             }
 
+
             graficoRentabilidad =
                 new Chart(
                     canvas,
@@ -1545,133 +1562,192 @@ function cargarRentabilidad() {
 
                         type: "bar",
 
+
                         data: {
 
                             labels:
                                 años,
 
+
                             datasets: [
 
-    {
-        label: "Mi cartera",
-        data: cartera,
-        backgroundColor: "#3B82F6",
-        borderColor: "#3B82F6",
-        borderWidth: 0
-    },
+                                {
+                                    label:
+                                        "Mi cartera",
 
-    {
-        label: "S&P 500",
-        data: sp500,
-        backgroundColor: "#79C7FF",
-        borderColor: "#79C7FF",
-        borderWidth: 0
-    },
+                                    data:
+                                        cartera,
 
-    {
-        label: "Nasdaq-100",
-        data: nasdaq,
-        backgroundColor: "#D5EDFF",
-        borderColor: "#D5EDFF",
-        borderWidth: 0
-    }
+                                    backgroundColor:
+                                        "#3B82F6",
 
-]
+                                    borderColor:
+                                        "#3B82F6",
+
+                                    borderWidth:
+                                        0
+                                },
+
+
+                                {
+                                    label:
+                                        "S&P 500",
+
+                                    data:
+                                        sp500,
+
+                                    backgroundColor:
+                                        "#79C7FF",
+
+                                    borderColor:
+                                        "#79C7FF",
+
+                                    borderWidth:
+                                        0
+                                },
+
+
+                                {
+                                    label:
+                                        "Nasdaq-100",
+
+                                    data:
+                                        nasdaq,
+
+                                    backgroundColor:
+                                        "#D5EDFF",
+
+                                    borderColor:
+                                        "#D5EDFF",
+
+                                    borderWidth:
+                                        0
+                                }
+
+                            ]
 
                         },
 
+
                         options: {
 
-                            responsive: true,
+                            responsive:
+                                true,
+
 
                             maintainAspectRatio:
                                 false,
 
+
                             plugins: {
 
-    legend: {
+                                legend: {
 
-        display: true,
+                                    display:
+                                        true,
 
-        position: "top"
+                                    position:
+                                        "top"
 
-    },
+                                },
 
-    tooltip: {
 
-        callbacks: {
+                                tooltip: {
 
-            label: function(context) {
+                                    callbacks: {
 
-                const valor =
-                    Number(context.raw) || 0;
+                                        label:
+                                            function(
+                                                context
+                                            ) {
 
-                return (
-                    context.dataset.label +
-                    ": " +
-                    valor.toLocaleString(
-                        "es-ES",
-                        {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }
-                    ) +
-                    "%"
-                );
+                                                const valor =
+                                                    Number(
+                                                        context.raw
+                                                    ) || 0;
 
-            }
 
-        }
+                                                return (
+                                                    context.dataset.label +
+                                                    ": " +
+                                                    valor.toLocaleString(
+                                                        "es-ES",
+                                                        {
+                                                            minimumFractionDigits:
+                                                                2,
 
-    }
+                                                            maximumFractionDigits:
+                                                                2
+                                                        }
+                                                    ) +
+                                                    "%"
+                                                );
 
-},
+                                            }
 
-                           scales: {
+                                    }
 
-    x: {
+                                }
 
-        grid: {
+                            },
 
-            display: false
 
-        }
+                            scales: {
 
-    },
+                                x: {
 
-    y: {
+                                    grid: {
 
-        grid: {
+                                        display:
+                                            false
 
-            color: "#eeeeee"
+                                    }
 
-        },
+                                },
 
-        ticks: {
 
-            callback:
-                function(value) {
+                                y: {
 
-                    return value + "%";
+                                    grid: {
 
-                }
+                                        color:
+                                            "#eeeeee"
 
-        }
+                                    },
 
-    }
 
-}
+                                    ticks: {
+
+                                        callback:
+                                            function(
+                                                value
+                                            ) {
+
+                                                return (
+                                                    value +
+                                                    "%"
+                                                );
+
+                                            }
+
+                                    }
+
+                                }
+
+                            }
 
                         }
 
                     }
                 );
 
+
             estado.textContent =
                 "Datos actualizados correctamente.";
 
         }
     )
+
 
     .catch(
         error => {
@@ -1680,6 +1756,7 @@ function cargarRentabilidad() {
                 "Error rentabilidad:",
                 error
             );
+
 
             estado.textContent =
                 "Error al cargar la rentabilidad: " +
