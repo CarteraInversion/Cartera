@@ -1233,6 +1233,27 @@ tbody tr:hover {
 
         </div>
 
+        <!-- ==========================================
+     EXPOSICIÓN POR GEOGRAFÍA
+     ========================================== -->
+
+<div class="panel rentabilidad-panel">
+
+    <h2>
+        Exposición por geografía
+    </h2>
+
+    <div class="rentabilidad-chart">
+
+        <canvas
+            id="graficoGeografia"
+        >
+        </canvas>
+
+    </div>
+
+</div>
+        
         <div
             id="estadoRentabilidad"
             class="rentabilidad-estado"
@@ -2071,6 +2092,217 @@ aplicarColorRentabilidad(
                     }
                 );
 
+            /* ==========================================
+   EXPOSICIÓN POR GEOGRAFÍA
+   ========================================== */
+
+const geografias = {};
+
+cartera.forEach(
+    posicion => {
+
+        const geografia =
+            posicion["Geografía"] ||
+            "Sin clasificar";
+
+        const valor =
+            Number(
+                posicion["Valor actual €"]
+            ) || 0;
+
+        if (
+            !geografias[geografia]
+        ) {
+
+            geografias[geografia] = 0;
+
+        }
+
+        geografias[geografia] +=
+            valor;
+
+    }
+);
+
+
+/* Ordenar de mayor a menor */
+
+const geografiasOrdenadas =
+    Object.entries(
+        geografias
+    )
+    .sort(
+        (a, b) =>
+            b[1] - a[1]
+    );
+
+
+const totalGeografia =
+    geografiasOrdenadas.reduce(
+        (sum, item) =>
+            sum + item[1],
+        0
+    );
+
+
+const etiquetasGeografia =
+    geografiasOrdenadas.map(
+        item =>
+            item[0]
+    );
+
+
+const porcentajesGeografia =
+    geografiasOrdenadas.map(
+        item =>
+            totalGeografia > 0
+                ? (
+                    item[1] /
+                    totalGeografia
+                ) * 100
+                : 0
+    );
+
+
+const canvasGeografia =
+    document.getElementById(
+        "graficoGeografia"
+    );
+
+
+new Chart(
+    canvasGeografia,
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels:
+                etiquetasGeografia,
+
+            datasets: [
+
+                {
+
+                    label:
+                        "Exposición",
+
+                    data:
+                        porcentajesGeografia,
+
+                    backgroundColor:
+                        "#0F766E",
+
+                    borderWidth:
+                        0
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            indexAxis:
+                "y",
+
+            responsive:
+                true,
+
+            maintainAspectRatio:
+                false,
+
+            plugins: {
+
+                legend: {
+
+                    display:
+                        false
+
+                },
+
+                tooltip: {
+
+                    callbacks: {
+
+                        label:
+                            function(
+                                context
+                            ) {
+
+                                return (
+                                    context.raw
+                                        .toLocaleString(
+                                            "es-ES",
+                                            {
+                                                minimumFractionDigits:
+                                                    2,
+                                                maximumFractionDigits:
+                                                    2
+                                            }
+                                        ) +
+                                    "%"
+                                );
+
+                            }
+
+                    }
+
+                }
+
+            },
+
+            scales: {
+
+                x: {
+
+                    beginAtZero:
+                        true,
+
+                    ticks: {
+
+                        callback:
+                            function(
+                                value
+                            ) {
+
+                                return (
+                                    value +
+                                    "%"
+                                );
+
+                            }
+
+                    },
+
+                    grid: {
+
+                        color:
+                            "#eeeeee"
+
+                    }
+
+                },
+
+                y: {
+
+                    grid: {
+
+                        display:
+                            false
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+);
 
             estado.textContent =
                 "Datos actualizados correctamente.";
