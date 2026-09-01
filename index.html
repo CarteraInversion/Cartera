@@ -86,7 +86,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(5, 1fr);
+        repeat(4, 1fr);
 
     gap: 20px;
 
@@ -1243,6 +1243,7 @@ tbody tr:hover {
     </div>
 
 </div>
+    
 <!-- ==========================================
      RESUMEN
      ========================================== -->
@@ -1298,21 +1299,7 @@ tbody tr:hover {
     </div>
 
 
-    <div class="card">
-
-        <div class="card-title">
-            Posiciones
-        </div>
-
-        <div
-            class="card-value"
-            id="numeroPosiciones"
-        >
-            —
-        </div>
-
-    </div>
-
+    
     <div class="card">
 
     <div class="card-title">
@@ -3384,11 +3371,7 @@ if (
         porcentaje(rentabilidad);
 
 
-    document.getElementById(
-        "numeroPosiciones"
-    ).textContent =
-        cartera.length;
-
+   
     document.getElementById(
     "liquidezPorcentaje"
     ).textContent =
