@@ -397,6 +397,103 @@ tbody tr:hover {
 
 }
 
+    /* ==========================================
+   TARJETAS RENTABILIDAD
+   ========================================== */
+
+.rentabilidad-resumen {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+.rentabilidad-card {
+
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.06);
+
+}
+
+.rentabilidad-card-titulo {
+
+    font-size: 13px;
+
+    color: #6b7280;
+
+    margin-bottom: 8px;
+
+    text-transform: uppercase;
+
+}
+
+.rentabilidad-card-valor {
+
+    font-size: 27px;
+
+    font-weight: bold;
+
+}
+
+.rentabilidad-card-sub {
+
+    margin-top: 5px;
+
+    font-size: 12px;
+
+    color: #6b7280;
+
+}
+
+.rentabilidad-positiva {
+
+    color: #16a34a;
+
+}
+
+.rentabilidad-negativa {
+
+    color: #dc2626;
+
+}
+
+
+@media (max-width: 900px) {
+
+    .rentabilidad-resumen {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .rentabilidad-resumen {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+    
 /* ==========================================
    MODAL
    ========================================== */
@@ -1029,6 +1126,98 @@ tbody tr:hover {
     class="vista-rentabilidad"
 >
 
+    <!-- ==========================================
+     RESUMEN RENTABILIDAD
+     ========================================== -->
+
+<div class="rentabilidad-resumen">
+
+    <!-- YTD -->
+
+    <div class="rentabilidad-card">
+
+        <div class="rentabilidad-card-titulo">
+            YTD
+        </div>
+
+        <div
+            id="rentabilidadYTD"
+            class="rentabilidad-card-valor"
+        >
+            —
+        </div>
+
+    </div>
+
+
+    <!-- S&P 500 -->
+
+    <div class="rentabilidad-card">
+
+        <div class="rentabilidad-card-titulo">
+            S&P 500
+        </div>
+
+        <div
+            id="rentabilidadSP500"
+            class="rentabilidad-card-valor"
+        >
+            —
+        </div>
+
+        <div
+            id="rentabilidadSP500EUR"
+            class="rentabilidad-card-sub"
+        >
+            EUR: —
+        </div>
+
+    </div>
+
+
+    <!-- NASDAQ-100 -->
+
+    <div class="rentabilidad-card">
+
+        <div class="rentabilidad-card-titulo">
+            NASDAQ-100
+        </div>
+
+        <div
+            id="rentabilidadNasdaq"
+            class="rentabilidad-card-valor"
+        >
+            —
+        </div>
+
+        <div
+            id="rentabilidadNasdaqEUR"
+            class="rentabilidad-card-sub"
+        >
+            EUR: —
+        </div>
+
+    </div>
+
+
+    <!-- DESDE INICIO -->
+
+    <div class="rentabilidad-card">
+
+        <div class="rentabilidad-card-titulo">
+            Desde inicio
+        </div>
+
+        <div
+            id="rentabilidadHistorica"
+            class="rentabilidad-card-valor"
+        >
+            —
+        </div>
+
+    </div>
+
+</div>
     <div class="panel rentabilidad-panel">
 
         <h2>
@@ -1539,7 +1728,161 @@ function cargarRentabilidad() {
                         ) * 100
                 );
 
+/* ==========================================
+   TARJETAS DE RENTABILIDAD
+   ========================================== */
 
+const ytdCartera =
+    Number(
+        datos.cartera.tirYTD
+    ) || 0;
+
+const historicaCartera =
+    Number(
+        datos.cartera.tirHistorica
+    ) || 0;
+
+const sp500USD =
+    Number(
+        datos.ytd.sp500USD
+    ) || 0;
+
+const sp500EUR =
+    Number(
+        datos.ytd.sp500EUR
+    ) || 0;
+
+const nasdaqUSD =
+    Number(
+        datos.ytd.nasdaqUSD
+    ) || 0;
+
+const nasdaqEUR =
+    Number(
+        datos.ytd.nasdaqEUR
+    ) || 0;
+
+
+/* ------------------------------------------
+   FUNCION COLOR
+   ------------------------------------------ */
+
+function aplicarColorRentabilidad(
+    elemento,
+    valor
+) {
+
+    elemento.classList.remove(
+        "rentabilidad-positiva",
+        "rentabilidad-negativa"
+    );
+
+    elemento.classList.add(
+        valor >= 0
+            ? "rentabilidad-positiva"
+            : "rentabilidad-negativa"
+    );
+
+}
+
+
+/* ------------------------------------------
+   YTD
+   ------------------------------------------ */
+
+const elementoYTD =
+    document.getElementById(
+        "rentabilidadYTD"
+    );
+
+elementoYTD.textContent =
+    porcentaje(
+        ytdCartera
+    );
+
+aplicarColorRentabilidad(
+    elementoYTD,
+    ytdCartera
+);
+
+
+/* ------------------------------------------
+   S&P 500
+   ------------------------------------------ */
+
+const elementoSP500 =
+    document.getElementById(
+        "rentabilidadSP500"
+    );
+
+elementoSP500.textContent =
+    porcentaje(
+        sp500USD
+    );
+
+aplicarColorRentabilidad(
+    elementoSP500,
+    sp500USD
+);
+
+
+document.getElementById(
+    "rentabilidadSP500EUR"
+).textContent =
+    "EUR: " +
+    porcentaje(
+        sp500EUR
+    );
+
+
+/* ------------------------------------------
+   NASDAQ-100
+   ------------------------------------------ */
+
+const elementoNasdaq =
+    document.getElementById(
+        "rentabilidadNasdaq"
+    );
+
+elementoNasdaq.textContent =
+    porcentaje(
+        nasdaqUSD
+    );
+
+aplicarColorRentabilidad(
+    elementoNasdaq,
+    nasdaqUSD
+);
+
+
+document.getElementById(
+    "rentabilidadNasdaqEUR"
+).textContent =
+    "EUR: " +
+    porcentaje(
+        nasdaqEUR
+    );
+
+
+/* ------------------------------------------
+   DESDE INICIO
+   ------------------------------------------ */
+
+const elementoHistorica =
+    document.getElementById(
+        "rentabilidadHistorica"
+    );
+
+elementoHistorica.textContent =
+    porcentaje(
+        historicaCartera
+    );
+
+aplicarColorRentabilidad(
+    elementoHistorica,
+    historicaCartera
+);
+            
             const canvas =
                 document.getElementById(
                     "graficoRentabilidad"
