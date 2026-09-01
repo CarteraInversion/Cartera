@@ -2092,7 +2092,7 @@ aplicarColorRentabilidad(
                     }
                 );
 
-         /* ==========================================
+/* ==========================================
    EXPOSICIÓN POR GEOGRAFÍA
    ========================================== */
 
@@ -2109,6 +2109,7 @@ function cargarGeografia() {
     if (!canvas) {
         return;
     }
+
 
     fetch(
         API_URL +
@@ -2140,6 +2141,7 @@ function cargarGeografia() {
                 "Datos geografía:",
                 carteraGeografia
             );
+
 
             if (
                 !Array.isArray(
@@ -2194,7 +2196,7 @@ function cargarGeografia() {
 
 
             /* ------------------------------------------
-               ORDENAR MAYOR → MENOR
+               ORDENAR DE MAYOR A MENOR
                ------------------------------------------ */
 
             const datosOrdenados =
