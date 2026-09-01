@@ -2106,251 +2106,301 @@ function cargarGeografia() {
             "graficoGeografia"
         );
 
-
     if (!canvas) {
         return;
     }
 
+    fetch(
+        API_URL +
+        "?t=" +
+        Date.now()
+    )
 
-    /* ------------------------------------------
-       AGRUPAR POSICIONES POR GEOGRAFÍA
-       ------------------------------------------ */
+    .then(
+        response => {
 
-    const geografias = {};
+            if (!response.ok) {
 
+                throw new Error(
+                    "HTTP " +
+                    response.status
+                );
 
-    cartera.forEach(
-        posicion => {
+            }
 
-            const geografia =
-                String(
-                    posicion["Geografía"] || ""
-                ).trim() ||
-                "Sin clasificar";
+            return response.json();
 
+        }
+    )
 
-            const valor =
-                Number(
-                    posicion["Valor actual €"]
-                ) || 0;
+    .then(
+        carteraGeografia => {
 
+            console.log(
+                "Datos geografía:",
+                carteraGeografia
+            );
 
             if (
-                !geografias[geografia]
+                !Array.isArray(
+                    carteraGeografia
+                )
             ) {
 
-                geografias[geografia] = 0;
+                throw new Error(
+                    "La API no devuelve una cartera válida."
+                );
 
             }
 
 
-            geografias[geografia] +=
-                valor;
+            /* ------------------------------------------
+               AGRUPAR POR GEOGRAFÍA
+               ------------------------------------------ */
 
-        }
-    );
-
-
-    /* ------------------------------------------
-       ORDENAR DE MAYOR A MENOR
-       ------------------------------------------ */
-
-    const datosOrdenados =
-        Object.entries(
-            geografias
-        ).sort(
-            (a, b) =>
-                b[1] - a[1]
-        );
+            const geografias = {};
 
 
-    const total =
-        datosOrdenados.reduce(
-            (suma, item) =>
-                suma + item[1],
-            0
-        );
+            carteraGeografia.forEach(
+                posicion => {
+
+                    const geografia =
+                        String(
+                            posicion["Geografía"] || ""
+                        ).trim() ||
+                        "Sin clasificar";
 
 
-    const etiquetas =
-        datosOrdenados.map(
-            item =>
-                item[0]
-        );
+                    const valor =
+                        Number(
+                            posicion["Valor actual €"]
+                        ) || 0;
 
 
-    const porcentajes =
-        datosOrdenados.map(
-            item =>
-                total > 0
-                    ? (
-                        item[1] /
-                        total
-                    ) * 100
-                    : 0
-        );
+                    if (
+                        !geografias[geografia]
+                    ) {
+
+                        geografias[geografia] = 0;
+
+                    }
 
 
-    /* ------------------------------------------
-       DESTRUIR GRÁFICO ANTERIOR
-       ------------------------------------------ */
+                    geografias[geografia] +=
+                        valor;
 
-    if (graficoGeografia) {
-
-        graficoGeografia.destroy();
-
-    }
+                }
+            );
 
 
-    /* ------------------------------------------
-       CREAR GRÁFICO
-       ------------------------------------------ */
+            /* ------------------------------------------
+               ORDENAR MAYOR → MENOR
+               ------------------------------------------ */
 
-    graficoGeografia =
-        new Chart(
-            canvas,
-            {
-
-                type: "bar",
-
-                data: {
-
-                    labels:
-                        etiquetas,
-
-                    datasets: [
-
-                        {
-
-                            label:
-                                "Exposición",
-
-                            data:
-                                porcentajes,
-
-                            backgroundColor:
-                                "#0F766E",
-
-                            borderWidth:
-                                0
-
-                        }
-
-                    ]
-
-                },
+            const datosOrdenados =
+                Object.entries(
+                    geografias
+                ).sort(
+                    (a, b) =>
+                        b[1] - a[1]
+                );
 
 
-                options: {
-
-                    indexAxis:
-                        "y",
-
-                    responsive:
-                        true,
-
-                    maintainAspectRatio:
-                        false,
+            const total =
+                datosOrdenados.reduce(
+                    (suma, item) =>
+                        suma + item[1],
+                    0
+                );
 
 
-                    plugins: {
+            const etiquetas =
+                datosOrdenados.map(
+                    item =>
+                        item[0]
+                );
 
-                        legend: {
 
-                            display:
-                                false
+            const porcentajes =
+                datosOrdenados.map(
+                    item =>
+                        total > 0
+                            ? (
+                                item[1] /
+                                total
+                            ) * 100
+                            : 0
+                );
+
+
+            /* ------------------------------------------
+               DESTRUIR GRÁFICO ANTERIOR
+               ------------------------------------------ */
+
+            if (graficoGeografia) {
+
+                graficoGeografia.destroy();
+
+            }
+
+
+            /* ------------------------------------------
+               CREAR GRÁFICO
+               ------------------------------------------ */
+
+            graficoGeografia =
+                new Chart(
+                    canvas,
+                    {
+
+                        type: "bar",
+
+                        data: {
+
+                            labels:
+                                etiquetas,
+
+                            datasets: [
+
+                                {
+
+                                    label:
+                                        "Exposición",
+
+                                    data:
+                                        porcentajes,
+
+                                    backgroundColor:
+                                        "#0F766E",
+
+                                    borderWidth:
+                                        0
+
+                                }
+
+                            ]
 
                         },
 
+                        options: {
 
-                        tooltip: {
+                            indexAxis:
+                                "y",
 
-                            callbacks: {
+                            responsive:
+                                true,
 
-                                label:
-                                    function(
-                                        context
-                                    ) {
+                            maintainAspectRatio:
+                                false,
 
-                                        const valor =
-                                            Number(
-                                                context.raw
-                                            ) || 0;
+                            plugins: {
 
+                                legend: {
 
-                                        return (
-                                            valor.toLocaleString(
-                                                "es-ES",
-                                                {
-                                                    minimumFractionDigits:
-                                                        2,
+                                    display:
+                                        false
 
-                                                    maximumFractionDigits:
-                                                        2
-                                                }
-                                            ) +
-                                            "%"
-                                        );
+                                },
+
+                                tooltip: {
+
+                                    callbacks: {
+
+                                        label:
+                                            function(
+                                                context
+                                            ) {
+
+                                                const valor =
+                                                    Number(
+                                                        context.raw
+                                                    ) || 0;
+
+                                                return (
+                                                    valor.toLocaleString(
+                                                        "es-ES",
+                                                        {
+                                                            minimumFractionDigits:
+                                                                2,
+
+                                                            maximumFractionDigits:
+                                                                2
+                                                        }
+                                                    ) +
+                                                    "%"
+                                                );
+
+                                            }
 
                                     }
 
-                            }
-
-                        }
-
-                    },
-
-
-                    scales: {
-
-                        x: {
-
-                            beginAtZero:
-                                true,
-
-                            grid: {
-
-                                color:
-                                    "#eeeeee"
+                                }
 
                             },
 
-                            ticks: {
+                            scales: {
 
-                                callback:
-                                    function(
-                                        value
-                                    ) {
+                                x: {
 
-                                        return (
-                                            value +
-                                            "%"
-                                        );
+                                    beginAtZero:
+                                        true,
+
+                                    grid: {
+
+                                        color:
+                                            "#eeeeee"
+
+                                    },
+
+                                    ticks: {
+
+                                        callback:
+                                            function(
+                                                value
+                                            ) {
+
+                                                return (
+                                                    value +
+                                                    "%"
+                                                );
+
+                                            }
 
                                     }
 
-                            }
+                                },
 
-                        },
+                                y: {
 
+                                    grid: {
 
-                        y: {
+                                        display:
+                                            false
 
-                            grid: {
+                                    }
 
-                                display:
-                                    false
+                                }
 
                             }
 
                         }
 
                     }
+                );
 
-                }
+        }
+    )
 
-            }
-        );
+    .catch(
+        error => {
+
+            console.error(
+                "Error geografía:",
+                error
+            );
+
+        }
+    );
 
 }
     
