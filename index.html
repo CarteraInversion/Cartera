@@ -1675,8 +1675,20 @@ function cargarRentabilidad() {
 
 
     .then(
-        response =>
-            response.json()
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP " +
+                    response.status
+                );
+
+            }
+
+            return response.json();
+
+        }
     )
 
 
@@ -1702,6 +1714,10 @@ function cargarRentabilidad() {
 
             }
 
+
+            /* ======================================
+               DATOS GRÁFICO ANUAL
+               ====================================== */
 
             const años =
                 datos.anual.map(
@@ -1736,161 +1752,181 @@ function cargarRentabilidad() {
                         ) * 100
                 );
 
-/* ==========================================
-   TARJETAS DE RENTABILIDAD
-   ========================================== */
 
-const ytdCartera =
-    Number(
-        datos.cartera.tirYTD
-    ) || 0;
+            /* ======================================
+               TARJETAS DE RENTABILIDAD
+               ====================================== */
 
-const historicaCartera =
-    Number(
-        datos.cartera.tirHistorica
-    ) || 0;
-
-const sp500USD =
-    Number(
-        datos.ytd.sp500USD
-    ) || 0;
-
-const sp500EUR =
-    Number(
-        datos.ytd.sp500EUR
-    ) || 0;
-
-const nasdaqUSD =
-    Number(
-        datos.ytd.nasdaqUSD
-    ) || 0;
-
-const nasdaqEUR =
-    Number(
-        datos.ytd.nasdaqEUR
-    ) || 0;
+            const ytdCartera =
+                Number(
+                    datos.cartera.tirYTD
+                ) || 0;
 
 
-/* ------------------------------------------
-   FUNCION COLOR
-   ------------------------------------------ */
-
-function aplicarColorRentabilidad(
-    elemento,
-    valor
-) {
-
-    elemento.classList.remove(
-        "rentabilidad-positiva",
-        "rentabilidad-negativa"
-    );
-
-    elemento.classList.add(
-        valor >= 0
-            ? "rentabilidad-positiva"
-            : "rentabilidad-negativa"
-    );
-
-}
+            const historicaCartera =
+                Number(
+                    datos.cartera.tirHistorica
+                ) || 0;
 
 
-/* ------------------------------------------
-   YTD
-   ------------------------------------------ */
-
-const elementoYTD =
-    document.getElementById(
-        "rentabilidadYTD"
-    );
-
-elementoYTD.textContent =
-    porcentaje(
-        ytdCartera
-    );
-
-aplicarColorRentabilidad(
-    elementoYTD,
-    ytdCartera
-);
+            const sp500USD =
+                Number(
+                    datos.ytd.sp500USD
+                ) || 0;
 
 
-/* ------------------------------------------
-   S&P 500
-   ------------------------------------------ */
-
-const elementoSP500 =
-    document.getElementById(
-        "rentabilidadSP500"
-    );
-
-elementoSP500.textContent =
-    porcentaje(
-        sp500USD
-    );
-
-aplicarColorRentabilidad(
-    elementoSP500,
-    sp500USD
-);
+            const sp500EUR =
+                Number(
+                    datos.ytd.sp500EUR
+                ) || 0;
 
 
-document.getElementById(
-    "rentabilidadSP500EUR"
-).textContent =
-    "EUR: " +
-    porcentaje(
-        sp500EUR
-    );
+            const nasdaqUSD =
+                Number(
+                    datos.ytd.nasdaqUSD
+                ) || 0;
 
 
-/* ------------------------------------------
-   NASDAQ-100
-   ------------------------------------------ */
-
-const elementoNasdaq =
-    document.getElementById(
-        "rentabilidadNasdaq"
-    );
-
-elementoNasdaq.textContent =
-    porcentaje(
-        nasdaqUSD
-    );
-
-aplicarColorRentabilidad(
-    elementoNasdaq,
-    nasdaqUSD
-);
+            const nasdaqEUR =
+                Number(
+                    datos.ytd.nasdaqEUR
+                ) || 0;
 
 
-document.getElementById(
-    "rentabilidadNasdaqEUR"
-).textContent =
-    "EUR: " +
-    porcentaje(
-        nasdaqEUR
-    );
+            /* ======================================
+               FUNCION COLOR
+               ====================================== */
+
+            function aplicarColorRentabilidad(
+                elemento,
+                valor
+            ) {
+
+                elemento.classList.remove(
+                    "rentabilidad-positiva",
+                    "rentabilidad-negativa"
+                );
 
 
-/* ------------------------------------------
-   DESDE INICIO
-   ------------------------------------------ */
+                elemento.classList.add(
+                    valor >= 0
+                        ? "rentabilidad-positiva"
+                        : "rentabilidad-negativa"
+                );
 
-const elementoHistorica =
-    document.getElementById(
-        "rentabilidadHistorica"
-    );
+            }
 
-elementoHistorica.textContent =
-    porcentaje(
-        historicaCartera
-    );
 
-aplicarColorRentabilidad(
-    elementoHistorica,
-    historicaCartera
-);
-            
+            /* ======================================
+               YTD
+               ====================================== */
+
+            const elementoYTD =
+                document.getElementById(
+                    "rentabilidadYTD"
+                );
+
+
+            elementoYTD.textContent =
+                porcentaje(
+                    ytdCartera
+                );
+
+
+            aplicarColorRentabilidad(
+                elementoYTD,
+                ytdCartera
+            );
+
+
+            /* ======================================
+               S&P 500
+               ====================================== */
+
+            const elementoSP500 =
+                document.getElementById(
+                    "rentabilidadSP500"
+                );
+
+
+            elementoSP500.textContent =
+                porcentaje(
+                    sp500USD
+                );
+
+
+            aplicarColorRentabilidad(
+                elementoSP500,
+                sp500USD
+            );
+
+
+            document.getElementById(
+                "rentabilidadSP500EUR"
+            ).textContent =
+                "EUR: " +
+                porcentaje(
+                    sp500EUR
+                );
+
+
+            /* ======================================
+               NASDAQ-100
+               ====================================== */
+
+            const elementoNasdaq =
+                document.getElementById(
+                    "rentabilidadNasdaq"
+                );
+
+
+            elementoNasdaq.textContent =
+                porcentaje(
+                    nasdaqUSD
+                );
+
+
+            aplicarColorRentabilidad(
+                elementoNasdaq,
+                nasdaqUSD
+            );
+
+
+            document.getElementById(
+                "rentabilidadNasdaqEUR"
+            ).textContent =
+                "EUR: " +
+                porcentaje(
+                    nasdaqEUR
+                );
+
+
+            /* ======================================
+               DESDE INICIO
+               ====================================== */
+
+            const elementoHistorica =
+                document.getElementById(
+                    "rentabilidadHistorica"
+                );
+
+
+            elementoHistorica.textContent =
+                porcentaje(
+                    historicaCartera
+                );
+
+
+            aplicarColorRentabilidad(
+                elementoHistorica,
+                historicaCartera
+            );
+
+
+            /* ======================================
+               CREAR GRÁFICO
+               ====================================== */
+
             const canvas =
                 document.getElementById(
                     "graficoRentabilidad"
@@ -1923,6 +1959,7 @@ aplicarColorRentabilidad(
                             datasets: [
 
                                 {
+
                                     label:
                                         "Mi cartera",
 
@@ -1937,10 +1974,12 @@ aplicarColorRentabilidad(
 
                                     borderWidth:
                                         0
+
                                 },
 
 
                                 {
+
                                     label:
                                         "S&P 500",
 
@@ -1955,10 +1994,12 @@ aplicarColorRentabilidad(
 
                                     borderWidth:
                                         0
+
                                 },
 
 
                                 {
+
                                     label:
                                         "Nasdaq-100",
 
@@ -1973,6 +2014,7 @@ aplicarColorRentabilidad(
 
                                     borderWidth:
                                         0
+
                                 }
 
                             ]
@@ -2092,6 +2134,33 @@ aplicarColorRentabilidad(
                     }
                 );
 
+
+            estado.textContent =
+                "Datos actualizados correctamente.";
+
+        }
+    )
+
+
+    .catch(
+        error => {
+
+            console.error(
+                "Error rentabilidad:",
+                error
+            );
+
+
+            estado.textContent =
+                "Error al cargar la rentabilidad: " +
+                error.message;
+
+        }
+    );
+
+}
+
+
 /* ==========================================
    EXPOSICIÓN POR GEOGRAFÍA
    ========================================== */
@@ -2106,8 +2175,11 @@ function cargarGeografia() {
             "graficoGeografia"
         );
 
+
     if (!canvas) {
+
         return;
+
     }
 
 
@@ -2116,6 +2188,7 @@ function cargarGeografia() {
         "?t=" +
         Date.now()
     )
+
 
     .then(
         response => {
@@ -2129,10 +2202,12 @@ function cargarGeografia() {
 
             }
 
+
             return response.json();
 
         }
     )
+
 
     .then(
         carteraGeografia => {
@@ -2156,9 +2231,9 @@ function cargarGeografia() {
             }
 
 
-            /* ------------------------------------------
+            /* ======================================
                AGRUPAR POR GEOGRAFÍA
-               ------------------------------------------ */
+               ====================================== */
 
             const geografias = {};
 
@@ -2183,7 +2258,8 @@ function cargarGeografia() {
                         !geografias[geografia]
                     ) {
 
-                        geografias[geografia] = 0;
+                        geografias[geografia] =
+                            0;
 
                     }
 
@@ -2195,9 +2271,9 @@ function cargarGeografia() {
             );
 
 
-            /* ------------------------------------------
-               ORDENAR DE MAYOR A MENOR
-               ------------------------------------------ */
+            /* ======================================
+               ORDENAR MAYOR → MENOR
+               ====================================== */
 
             const datosOrdenados =
                 Object.entries(
@@ -2235,20 +2311,22 @@ function cargarGeografia() {
                 );
 
 
-            /* ------------------------------------------
+            /* ======================================
                DESTRUIR GRÁFICO ANTERIOR
-               ------------------------------------------ */
+               ====================================== */
 
-            if (graficoGeografia) {
+            if (
+                graficoGeografia
+            ) {
 
                 graficoGeografia.destroy();
 
             }
 
 
-            /* ------------------------------------------
+            /* ======================================
                CREAR GRÁFICO
-               ------------------------------------------ */
+               ====================================== */
 
             graficoGeografia =
                 new Chart(
@@ -2284,6 +2362,7 @@ function cargarGeografia() {
 
                         },
 
+
                         options: {
 
                             indexAxis:
@@ -2295,6 +2374,7 @@ function cargarGeografia() {
                             maintainAspectRatio:
                                 false,
 
+
                             plugins: {
 
                                 legend: {
@@ -2303,6 +2383,7 @@ function cargarGeografia() {
                                         false
 
                                 },
+
 
                                 tooltip: {
 
@@ -2317,6 +2398,7 @@ function cargarGeografia() {
                                                     Number(
                                                         context.raw
                                                     ) || 0;
+
 
                                                 return (
                                                     valor.toLocaleString(
@@ -2339,6 +2421,7 @@ function cargarGeografia() {
                                 }
 
                             },
+
 
                             scales: {
 
@@ -2372,6 +2455,7 @@ function cargarGeografia() {
 
                                 },
 
+
                                 y: {
 
                                     grid: {
@@ -2393,6 +2477,7 @@ function cargarGeografia() {
         }
     )
 
+
     .catch(
         error => {
 
@@ -2405,6 +2490,11 @@ function cargarGeografia() {
     );
 
 }
+
+
+/* ==========================================
+   FORMATO EUROS
+   ========================================== */
     
 /* ==========================================
    FORMATO EUROS
