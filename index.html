@@ -2092,240 +2092,265 @@ aplicarColorRentabilidad(
                     }
                 );
 
-            /* ==========================================
+         /* ==========================================
    EXPOSICIÓN POR GEOGRAFÍA
    ========================================== */
 
-const geografias = {};
+let graficoGeografia = null;
 
-cartera.forEach(
-    posicion => {
 
-        const geografia =
-            posicion["Geografía"] ||
-            "Sin clasificar";
+function cargarGeografia() {
 
-        const valor =
-            Number(
-                posicion["Valor actual €"]
-            ) || 0;
+    const canvas =
+        document.getElementById(
+            "graficoGeografia"
+        );
 
-        if (
-            !geografias[geografia]
-        ) {
 
-            geografias[geografia] = 0;
+    if (!canvas) {
+        return;
+    }
+
+
+    /* ------------------------------------------
+       AGRUPAR POSICIONES POR GEOGRAFÍA
+       ------------------------------------------ */
+
+    const geografias = {};
+
+
+    cartera.forEach(
+        posicion => {
+
+            const geografia =
+                String(
+                    posicion["Geografía"] || ""
+                ).trim() ||
+                "Sin clasificar";
+
+
+            const valor =
+                Number(
+                    posicion["Valor actual €"]
+                ) || 0;
+
+
+            if (
+                !geografias[geografia]
+            ) {
+
+                geografias[geografia] = 0;
+
+            }
+
+
+            geografias[geografia] +=
+                valor;
 
         }
+    );
 
-        geografias[geografia] +=
-            valor;
+
+    /* ------------------------------------------
+       ORDENAR DE MAYOR A MENOR
+       ------------------------------------------ */
+
+    const datosOrdenados =
+        Object.entries(
+            geografias
+        ).sort(
+            (a, b) =>
+                b[1] - a[1]
+        );
+
+
+    const total =
+        datosOrdenados.reduce(
+            (suma, item) =>
+                suma + item[1],
+            0
+        );
+
+
+    const etiquetas =
+        datosOrdenados.map(
+            item =>
+                item[0]
+        );
+
+
+    const porcentajes =
+        datosOrdenados.map(
+            item =>
+                total > 0
+                    ? (
+                        item[1] /
+                        total
+                    ) * 100
+                    : 0
+        );
+
+
+    /* ------------------------------------------
+       DESTRUIR GRÁFICO ANTERIOR
+       ------------------------------------------ */
+
+    if (graficoGeografia) {
+
+        graficoGeografia.destroy();
 
     }
-);
 
 
-/* Ordenar de mayor a menor */
+    /* ------------------------------------------
+       CREAR GRÁFICO
+       ------------------------------------------ */
 
-const geografiasOrdenadas =
-    Object.entries(
-        geografias
-    )
-    .sort(
-        (a, b) =>
-            b[1] - a[1]
-    );
+    graficoGeografia =
+        new Chart(
+            canvas,
+            {
 
+                type: "bar",
 
-const totalGeografia =
-    geografiasOrdenadas.reduce(
-        (sum, item) =>
-            sum + item[1],
-        0
-    );
+                data: {
 
+                    labels:
+                        etiquetas,
 
-const etiquetasGeografia =
-    geografiasOrdenadas.map(
-        item =>
-            item[0]
-    );
+                    datasets: [
 
+                        {
 
-const porcentajesGeografia =
-    geografiasOrdenadas.map(
-        item =>
-            totalGeografia > 0
-                ? (
-                    item[1] /
-                    totalGeografia
-                ) * 100
-                : 0
-    );
+                            label:
+                                "Exposición",
 
+                            data:
+                                porcentajes,
 
-const canvasGeografia =
-    document.getElementById(
-        "graficoGeografia"
-    );
+                            backgroundColor:
+                                "#0F766E",
 
+                            borderWidth:
+                                0
 
-new Chart(
-    canvasGeografia,
-    {
+                        }
 
-        type: "bar",
-
-        data: {
-
-            labels:
-                etiquetasGeografia,
-
-            datasets: [
-
-                {
-
-                    label:
-                        "Exposición",
-
-                    data:
-                        porcentajesGeografia,
-
-                    backgroundColor:
-                        "#0F766E",
-
-                    borderWidth:
-                        0
-
-                }
-
-            ]
-
-        },
-
-        options: {
-
-            indexAxis:
-                "y",
-
-            responsive:
-                true,
-
-            maintainAspectRatio:
-                false,
-
-            plugins: {
-
-                legend: {
-
-                    display:
-                        false
+                    ]
 
                 },
 
-                tooltip: {
 
-                    callbacks: {
+                options: {
 
-                        label:
-                            function(
-                                context
-                            ) {
+                    indexAxis:
+                        "y",
 
-                                return (
-                                    context.raw
-                                        .toLocaleString(
-                                            "es-ES",
-                                            {
-                                                minimumFractionDigits:
-                                                    2,
-                                                maximumFractionDigits:
-                                                    2
-                                            }
-                                        ) +
-                                    "%"
-                                );
-
-                            }
-
-                    }
-
-                }
-
-            },
-
-            scales: {
-
-                x: {
-
-                    beginAtZero:
+                    responsive:
                         true,
 
-                    ticks: {
+                    maintainAspectRatio:
+                        false,
 
-                        callback:
-                            function(
-                                value
-                            ) {
 
-                                return (
-                                    value +
-                                    "%"
-                                );
+                    plugins: {
+
+                        legend: {
+
+                            display:
+                                false
+
+                        },
+
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label:
+                                    function(
+                                        context
+                                    ) {
+
+                                        const valor =
+                                            Number(
+                                                context.raw
+                                            ) || 0;
+
+
+                                        return (
+                                            valor.toLocaleString(
+                                                "es-ES",
+                                                {
+                                                    minimumFractionDigits:
+                                                        2,
+
+                                                    maximumFractionDigits:
+                                                        2
+                                                }
+                                            ) +
+                                            "%"
+                                        );
+
+                                    }
 
                             }
+
+                        }
 
                     },
 
-                    grid: {
 
-                        color:
-                            "#eeeeee"
+                    scales: {
 
-                    }
+                        x: {
 
-                },
+                            beginAtZero:
+                                true,
 
-                y: {
+                            grid: {
 
-                    grid: {
+                                color:
+                                    "#eeeeee"
 
-                        display:
-                            false
+                            },
+
+                            ticks: {
+
+                                callback:
+                                    function(
+                                        value
+                                    ) {
+
+                                        return (
+                                            value +
+                                            "%"
+                                        );
+
+                                    }
+
+                            }
+
+                        },
+
+
+                        y: {
+
+                            grid: {
+
+                                display:
+                                    false
+
+                            }
+
+                        }
 
                     }
 
                 }
 
             }
-
-        }
-
-    }
-);
-
-            estado.textContent =
-                "Datos actualizados correctamente.";
-
-        }
-    )
-
-
-    .catch(
-        error => {
-
-            console.error(
-                "Error rentabilidad:",
-                error
-            );
-
-
-            estado.textContent =
-                "Error al cargar la rentabilidad: " +
-                error.message;
-
-        }
-    );
+        );
 
 }
     
@@ -4491,6 +4516,7 @@ function mostrarVista(vista) {
             "block";
         
         cargarRentabilidad();
+        cargarGeografia();
         
         tabCartera.classList.remove(
             "activa"
