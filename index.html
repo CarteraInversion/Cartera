@@ -1233,7 +1233,7 @@ tbody tr:hover {
 
         </div>
 
-        <!-- ==========================================
+ <!-- ==========================================
      EXPOSICIÓN POR GEOGRAFÍA
      ========================================== -->
 
@@ -1253,7 +1253,27 @@ tbody tr:hover {
     </div>
 
 </div>
-        
+
+ <!-- ==========================================
+     EXPOSICIÓN POR SECTOR
+     ========================================== -->
+
+<div class="panel rentabilidad-panel">
+
+    <h2>
+        Exposición por sector
+    </h2>
+
+    <div class="rentabilidad-chart">
+
+        <canvas
+            id="graficoSector"
+        >
+        </canvas>
+
+    </div>
+
+</div>
         <div
             id="estadoRentabilidad"
             class="rentabilidad-estado"
@@ -2493,8 +2513,333 @@ function cargarGeografia() {
 
 
 /* ==========================================
-   FORMATO EUROS
+   EXPOSICIÓN POR SECTOR
    ========================================== */
+
+let graficoSector = null;
+
+
+function cargarSector() {
+
+    const canvas =
+        document.getElementById(
+            "graficoSector"
+        );
+
+
+    if (!canvas) {
+
+        return;
+
+    }
+
+
+    fetch(
+        API_URL +
+        "?t=" +
+        Date.now()
+    )
+
+
+    .then(
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP " +
+                    response.status
+                );
+
+            }
+
+            return response.json();
+
+        }
+    )
+
+
+    .then(
+        carteraSector => {
+
+            console.log(
+                "Datos sector:",
+                carteraSector
+            );
+
+
+            if (
+                !Array.isArray(
+                    carteraSector
+                )
+            ) {
+
+                throw new Error(
+                    "La API no devuelve una cartera válida."
+                );
+
+            }
+
+
+            /* ======================================
+               AGRUPAR POR SECTOR
+               ====================================== */
+
+            const sectores = {};
+
+
+            carteraSector.forEach(
+                posicion => {
+
+                    const sector =
+                        String(
+                            posicion["Sector"] || ""
+                        ).trim() ||
+                        "Sin clasificar";
+
+
+                    const valor =
+                        Number(
+                            posicion["Valor actual €"]
+                        ) || 0;
+
+
+                    if (
+                        !sectores[sector]
+                    ) {
+
+                        sectores[sector] =
+                            0;
+
+                    }
+
+
+                    sectores[sector] +=
+                        valor;
+
+                }
+            );
+
+
+            /* ======================================
+               ORDENAR MAYOR → MENOR
+               ====================================== */
+
+            const datosOrdenados =
+                Object.entries(
+                    sectores
+                ).sort(
+                    (a, b) =>
+                        b[1] - a[1]
+                );
+
+
+            const total =
+                datosOrdenados.reduce(
+                    (suma, item) =>
+                        suma + item[1],
+                    0
+                );
+
+
+            const etiquetas =
+                datosOrdenados.map(
+                    item =>
+                        item[0]
+                );
+
+
+            const porcentajes =
+                datosOrdenados.map(
+                    item =>
+                        total > 0
+                            ? (
+                                item[1] /
+                                total
+                            ) * 100
+                            : 0
+                );
+
+
+            /* ======================================
+               DESTRUIR GRÁFICO ANTERIOR
+               ====================================== */
+
+            if (
+                graficoSector
+            ) {
+
+                graficoSector.destroy();
+
+            }
+
+
+            /* ======================================
+               CREAR GRÁFICO
+               ====================================== */
+
+            graficoSector =
+                new Chart(
+                    canvas,
+                    {
+
+                        type: "bar",
+
+                        data: {
+
+                            labels:
+                                etiquetas,
+
+                            datasets: [
+
+                                {
+
+                                    label:
+                                        "Exposición",
+
+                                    data:
+                                        porcentajes,
+
+                                    backgroundColor:
+                                        "#7C3AED",
+
+                                    borderWidth:
+                                        0
+
+                                }
+
+                            ]
+
+                        },
+
+
+                        options: {
+
+                            indexAxis:
+                                "y",
+
+                            responsive:
+                                true,
+
+                            maintainAspectRatio:
+                                false,
+
+
+                            plugins: {
+
+                                legend: {
+
+                                    display:
+                                        false
+
+                                },
+
+
+                                tooltip: {
+
+                                    callbacks: {
+
+                                        label:
+                                            function(
+                                                context
+                                            ) {
+
+                                                const valor =
+                                                    Number(
+                                                        context.raw
+                                                    ) || 0;
+
+
+                                                return (
+                                                    valor.toLocaleString(
+                                                        "es-ES",
+                                                        {
+                                                            minimumFractionDigits:
+                                                                2,
+
+                                                            maximumFractionDigits:
+                                                                2
+                                                        }
+                                                    ) +
+                                                    "%"
+                                                );
+
+                                            }
+
+                                    }
+
+                                }
+
+                            },
+
+
+                            scales: {
+
+                                x: {
+
+                                    beginAtZero:
+                                        true,
+
+                                    grid: {
+
+                                        color:
+                                            "#eeeeee"
+
+                                    },
+
+                                    ticks: {
+
+                                        callback:
+                                            function(
+                                                value
+                                            ) {
+
+                                                return (
+                                                    value +
+                                                    "%"
+                                                );
+
+                                            }
+
+                                    }
+
+                                },
+
+
+                                y: {
+
+                                    grid: {
+
+                                        display:
+                                            false
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+                );
+
+        }
+    )
+
+
+    .catch(
+        error => {
+
+            console.error(
+                "Error sector:",
+                error
+            );
+
+        }
+    );
+
+}
     
 /* ==========================================
    FORMATO EUROS
@@ -4659,6 +5004,7 @@ function mostrarVista(vista) {
         
         cargarRentabilidad();
         cargarGeografia();
+        cargarSector();
         
         tabCartera.classList.remove(
             "activa"
