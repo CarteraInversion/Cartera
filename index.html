@@ -10,74 +10,100 @@
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>Mi Cartera</title>
+<title>Cartera Inversion Portfolio</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-    .pantalla-acceso {
+.pantalla-acceso {
     position: fixed;
     inset: 0;
     z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f4f6f8;
+    background: #f7f7f5;
 }
 
 .acceso-card {
-    width: 360px;
-    max-width: calc(100vw - 40px);
-    background: white;
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.12);
-    text-align: center;
+    width: 380px;
+    max-width: calc(100vw - 30px);
+    background: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    padding: 42px 40px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    text-align: left;
+}
+
+.logo-acceso {
+    display: block;
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+    margin: 0 auto 26px;
 }
 
 .acceso-card h2 {
-    margin: 0 0 8px;
-    font-size: 26px;
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+    color: #111111;
 }
 
-.acceso-card p {
-    margin: 0 0 22px;
-    color: #6b7280;
+.subtitulo-acceso {
+    margin: 6px 0 32px;
     font-size: 14px;
+    color: #777777;
+}
+
+.acceso-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #555555;
 }
 
 .acceso-card input {
     width: 100%;
     box-sizing: border-box;
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 15px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #cfcfcf;
+    border-radius: 6px;
+    font-size: 14px;
     margin-bottom: 12px;
+    outline: none;
+    background: #fff;
+}
+
+.acceso-card input:focus {
+    border-color: #8aa7cc;
+    box-shadow: 0 0 0 2px rgba(41,85,143,0.08);
 }
 
 .acceso-card button {
     width: 100%;
-    padding: 12px;
+    height: 40px;
     border: none;
-    border-radius: 8px;
-    background: #2563eb;
+    border-radius: 6px;
+    background: #1c1c1c;
     color: white;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
 
 .acceso-card button:hover {
-    background: #1d4ed8;
+    background: #000000;
 }
 
 #errorPassword {
-    margin-top: 12px;
+    margin-top: 10px;
+    min-height: 18px;
     color: #dc2626;
     font-size: 13px;
-    min-height: 18px;
 }
 /* ==========================================
    GENERAL
@@ -88,8 +114,7 @@
 }
 
 body {
-
-    margin: 0;
+margin: 0;
 
     font-family:
         Arial,
@@ -1137,10 +1162,27 @@ tbody tr:hover {
 
 <body>
 
+
+
+
 <div id="pantallaAcceso" class="pantalla-acceso">
     <div class="acceso-card">
-        <h2>Cartera Inversion Portfolio</h2>
-        <p>Introduce la contraseña para acceder</p>
+
+        <img
+            src="logo.png"
+            alt="Logo"
+            class="logo-acceso"
+        >
+
+        <h2>Mi Cartera</h2>
+
+        <p class="subtitulo-acceso">
+            Panel privado de inversiones
+        </p>
+
+        <label for="campoPassword">
+            Contraseña
+        </label>
 
         <input
             type="password"
@@ -1150,10 +1192,11 @@ tbody tr:hover {
         >
 
         <button type="button" id="botonAcceso">
-            Acceder
+            Entrar
         </button>
 
         <div id="errorPassword"></div>
+
     </div>
 </div>
 
@@ -1738,19 +1781,26 @@ tbody tr:hover {
 
 <script>
 
-
-    const CONTRASENA = "nico";
+const CONTRASENA = "nico";
 
 function comprobarPassword() {
-    const password = document.getElementById("campoPassword").value;
-    const error = document.getElementById("errorPassword");
+    const password =
+        document.getElementById("campoPassword").value;
+
+    const error =
+        document.getElementById("errorPassword");
 
     if (password === CONTRASENA) {
+
         document.getElementById("pantallaAcceso").style.display = "none";
         error.textContent = "";
+
     } else {
+
         error.textContent = "Contraseña incorrecta";
+
         document.getElementById("campoPassword").value = "";
+
         document.getElementById("campoPassword").focus();
     }
 }
@@ -1762,6 +1812,7 @@ document.getElementById("campoPassword").addEventListener("keydown", function(ev
         comprobarPassword();
     }
 });
+
 /* ==========================================
    API GOOGLE APPS SCRIPT
    ========================================== */
