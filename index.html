@@ -89,25 +89,6 @@
 
 body {
 
-    <div id="pantallaAcceso" class="pantalla-acceso">
-    <div class="acceso-card">
-        <h2>Mi Cartera</h2>
-        <p>Introduce la contraseña para acceder</p>
-
-        <input
-            type="password"
-            id="campoPassword"
-            placeholder="Contraseña"
-            autocomplete="current-password"
-        >
-
-        <button type="button" onclick="comprobarPassword()">
-            Acceder
-        </button>
-
-        <div id="errorPassword"></div>
-    </div>
-</div>
     margin: 0;
 
     font-family:
@@ -1156,6 +1137,25 @@ tbody tr:hover {
 
 <body>
 
+<div id="pantallaAcceso" class="pantalla-acceso">
+    <div class="acceso-card">
+        <h2>Mi Cartera</h2>
+        <p>Introduce la contraseña para acceder</p>
+
+        <input
+            type="password"
+            id="campoPassword"
+            placeholder="Contraseña"
+            autocomplete="current-password"
+        >
+
+        <button type="button" id="botonAcceso">
+            Acceder
+        </button>
+
+        <div id="errorPassword"></div>
+    </div>
+</div>
 
 <div class="container">
 
@@ -1747,17 +1747,21 @@ function comprobarPassword() {
 
     if (password === CONTRASENA) {
         document.getElementById("pantallaAcceso").style.display = "none";
+        error.textContent = "";
     } else {
         error.textContent = "Contraseña incorrecta";
         document.getElementById("campoPassword").value = "";
         document.getElementById("campoPassword").focus();
     }
-    document.getElementById("campoPassword").addEventListener("keydown", function(event) {
+}
+
+document.getElementById("botonAcceso").addEventListener("click", comprobarPassword);
+
+document.getElementById("campoPassword").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         comprobarPassword();
     }
 });
-}
 /* ==========================================
    API GOOGLE APPS SCRIPT
    ========================================== */
