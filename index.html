@@ -16,6 +16,69 @@
 
 <style>
 
+    .pantalla-acceso {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f6f8;
+}
+
+.acceso-card {
+    width: 360px;
+    max-width: calc(100vw - 40px);
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+.acceso-card h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+}
+
+.acceso-card p {
+    margin: 0 0 22px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.acceso-card input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.acceso-card button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.acceso-card button:hover {
+    background: #1d4ed8;
+}
+
+#errorPassword {
+    margin-top: 12px;
+    color: #dc2626;
+    font-size: 13px;
+    min-height: 18px;
+}
 /* ==========================================
    GENERAL
    ========================================== */
@@ -26,6 +89,25 @@
 
 body {
 
+    <div id="pantallaAcceso" class="pantalla-acceso">
+    <div class="acceso-card">
+        <h2>Mi Cartera</h2>
+        <p>Introduce la contraseña para acceder</p>
+
+        <input
+            type="password"
+            id="campoPassword"
+            placeholder="Contraseña"
+            autocomplete="current-password"
+        >
+
+        <button type="button" onclick="comprobarPassword()">
+            Acceder
+        </button>
+
+        <div id="errorPassword"></div>
+    </div>
+</div>
     margin: 0;
 
     font-family:
@@ -1657,6 +1739,25 @@ tbody tr:hover {
 <script>
 
 
+    const CONTRASENA = "nico";
+
+function comprobarPassword() {
+    const password = document.getElementById("campoPassword").value;
+    const error = document.getElementById("errorPassword");
+
+    if (password === CONTRASENA) {
+        document.getElementById("pantallaAcceso").style.display = "none";
+    } else {
+        error.textContent = "Contraseña incorrecta";
+        document.getElementById("campoPassword").value = "";
+        document.getElementById("campoPassword").focus();
+    }
+    document.getElementById("campoPassword").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        comprobarPassword();
+    }
+});
+}
 /* ==========================================
    API GOOGLE APPS SCRIPT
    ========================================== */
